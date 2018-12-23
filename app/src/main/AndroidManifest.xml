@@ -31,6 +31,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hackharvard.desudoers.kinderly.LoginActivity" />
         </activity>
+        <activity
+            android:name=".RentActivity"
+            android:label="@string/title_activity_rent" />
+        <activity
+            android:name=".LetActivity"
+            android:label="@string/title_activity_let"></activity>
     </application>
 
 </manifest>

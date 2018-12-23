@@ -61,8 +61,10 @@ public class LoginActivity extends AppCompatActivity{
 
         sp = getSharedPreferences("login", MODE_PRIVATE);
 
-        if(sp.getBoolean("logged", false))
-            goToMainActivity();
+        if(sp.getBoolean("logged", false)) {
+//            goToRentActivity();
+//            goToLetActivity();
+        }
 
         // Set up the login form.
         mNumberView = (AutoCompleteTextView) findViewById(R.id.number);
@@ -241,6 +243,8 @@ public class LoginActivity extends AppCompatActivity{
 
             if (success) {
                 finish();
+//                goToRentActivity();
+//                goToLetActivity();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -254,9 +258,14 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
-    private void goToMainActivity(){
-//        Intent i = new Intent(this, MainActivity.class);
-//        startActivity(i);
+    private void goToRentActivity(){
+        Intent i = new Intent(this, RentActivity.class);
+        startActivity(i);
+    }
+
+    private void goToLetActivity(){
+        Intent i = new Intent(this, LetActivity.class);
+        startActivity(i);
     }
 
     private void goToRegisterActivity(){

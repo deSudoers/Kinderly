@@ -18,4 +18,9 @@
     </string>
     <string name="prompt_number">Mobile Number</string>
     <string name="title_activity_register">Sign up</string>
+    <string name="title_activity_rent">Rent</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_let">Let</string>
 </resources>
