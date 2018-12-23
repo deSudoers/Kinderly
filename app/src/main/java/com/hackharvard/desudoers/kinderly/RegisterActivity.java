@@ -3,8 +3,6 @@ package com.hackharvard.desudoers.kinderly;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -39,59 +37,44 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via number/password.
  */
-public class LoginActivity extends AppCompatActivity{
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+public class RegisterActivity extends AppCompatActivity {
+    
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mNumberView;
+    private EditText mFNameView;
+    private EditText mLNameView;
+    private EditText mNumberView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
-    private SharedPreferences sp;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        sp = getSharedPreferences("login", MODE_PRIVATE);
-
-        if(sp.getBoolean("logged", false))
-            goToMainActivity();
-
+        setContentView(R.layout.activity_register);
+        setupActionBar();
         // Set up the login form.
-        mNumberView = (AutoCompleteTextView) findViewById(R.id.number);
-
+        mFNameView = (EditText) findViewById(R.id.firstname);
+        mLNameView = (EditText) findViewById(R.id.lastname); 
+        mNumberView = (EditText) findViewById(R.id.number);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    attemptRegister();
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mNumberSignInButton = (Button) findViewById(R.id.number_sign_in_button);
-        mNumberSignInButton.setOnClickListener(new OnClickListener() {
+        Button mSignUpButton = (Button) findViewById(R.id.sign_up_button);
+        mSignUpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
-        Button mRegisterButton = (Button) findViewById(R.id.register_button);
-        mRegisterButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToRegisterActivity();
+                attemptRegister();
             }
         });
 
@@ -101,20 +84,35 @@ public class LoginActivity extends AppCompatActivity{
 
 
     /**
+     * Set up the {@link android.app.ActionBar}, if the API is available.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setupActionBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            // Show the Up button in the action bar.
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid number, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptRegister() {
         if (mAuthTask != null) {
             return;
         }
 
         // Reset errors.
+        mFNameView.setError(null);
+        mLNameView.setError(null);
         mNumberView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
+        String firstname = mFNameView.getText().toString();
+        String lastname = mLNameView.getText().toString();
         String number = mNumberView.getText().toString();
         String password = mPasswordView.getText().toString();
 
@@ -128,7 +126,7 @@ public class LoginActivity extends AppCompatActivity{
             cancel = true;
         }
 
-        // Check for a valid number address.
+        // Check for a valid number.
         if (TextUtils.isEmpty(number)) {
             mNumberView.setError(getString(R.string.error_field_required));
             focusView = mNumberView;
@@ -136,6 +134,18 @@ public class LoginActivity extends AppCompatActivity{
         } else if (!isNumberValid(number)) {
             mNumberView.setError(getString(R.string.error_invalid_number));
             focusView = mNumberView;
+            cancel = true;
+        }
+
+        if(TextUtils.isEmpty(lastname)){
+            mLNameView.setError(getString(R.string.error_field_required));
+            focusView = mLNameView;
+            cancel = true;
+        }
+
+        if(TextUtils.isEmpty(firstname)){
+            mFNameView.setError(getString(R.string.error_field_required));
+            focusView = mFNameView;
             cancel = true;
         }
 
@@ -197,6 +207,7 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -241,6 +252,7 @@ public class LoginActivity extends AppCompatActivity{
 
             if (success) {
                 finish();
+                goToMainActivity();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -257,11 +269,6 @@ public class LoginActivity extends AppCompatActivity{
     private void goToMainActivity(){
 //        Intent i = new Intent(this, MainActivity.class);
 //        startActivity(i);
-    }
-
-    private void goToRegisterActivity(){
-        Intent i = new Intent(this, RegisterActivity.class);
-        startActivity(i);
     }
 }
 
