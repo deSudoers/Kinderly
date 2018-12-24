@@ -23,4 +23,6 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_let">Let</string>
+    <string name="title_responses">Responses</string>
+    <string name="title_profile">Profile</string>
 </resources>
