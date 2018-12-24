@@ -3,23 +3,25 @@ package com.hackharvard.desudoers.kinderly;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 
 import org.w3c.dom.Text;
 
 public class HomeFragmentRent extends Fragment {
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstancestate) {
@@ -50,5 +52,15 @@ public class HomeFragmentRent extends Fragment {
 //                Log.i(TAG, "An error occurred: " + status);
             }
         });
+
+        ListView listView = (ListView) getView().findViewById(R.id.cardList);
+        listView.setDivider(null);
+        CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getContext(), R.layout.list_item_card);
+
+        for (int i = 0; i < 10; i++) {
+            Card card = new Card("Card " + (i+1) + " Line 1", "Card " + (i+1) + " Line 2");
+            cardArrayAdapter.add(card);
+        }
+        listView.setAdapter(cardArrayAdapter);
     }
 }
