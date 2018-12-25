@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ public class HomeFragmentRent extends Fragment {
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment, autocompleteFragment);
         ft.commit();
+
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -77,5 +79,26 @@ public class HomeFragmentRent extends Fragment {
                 startActivity(i);
             }
         });
+
+        Button mFilterButton = (Button) getView().findViewById(R.id.filter);
+        mFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToFilterActivity();
+            }
+        });
+
+        Button mSortButton = (Button) getView().findViewById(R.id.sort);
+        mSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    private void goToFilterActivity(){
+//        Intent i = new Intent(getContext(), FilterActivity.class);
+//        startActivity(i);
     }
 }

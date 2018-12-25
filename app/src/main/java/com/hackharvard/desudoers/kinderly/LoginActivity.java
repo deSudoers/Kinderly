@@ -61,8 +61,8 @@ public class LoginActivity extends AppCompatActivity{
 
         sp = getSharedPreferences("login", MODE_PRIVATE);
 
-        if(sp.getBoolean("logged", false)) {
-//            goToRentActivity();
+        if(sp.getBoolean("logged", true)) {
+            goToRentActivity();
 //            goToLetActivity();
         }
 
@@ -243,7 +243,7 @@ public class LoginActivity extends AppCompatActivity{
 
             if (success) {
                 finish();
-//                goToRentActivity();
+                goToRentActivity();
 //                goToLetActivity();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
