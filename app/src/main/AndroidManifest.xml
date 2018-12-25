@@ -48,6 +48,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hackharvard.desudoers.kinderly.RentActivity" />
         </activity>
+            android:label="@string/title_activity_let"/>
+        <activity
+            android:name=".LetWizard"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>
