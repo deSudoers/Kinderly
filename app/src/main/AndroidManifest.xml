@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.hackharvard.desudoers.kinderly">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -35,7 +35,7 @@
         <activity
             android:name=".RentActivity"
             android:label="@string/title_activity_rent"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LetActivity"
             android:label="@string/title_activity_let" />
@@ -47,6 +47,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hackharvard.desudoers.kinderly.RentActivity" />
+        </activity>
+        <activity
+            android:name=".FilterActivity"
+            android:label="@string/title_activity_filter">
         </activity>
     </application>
 

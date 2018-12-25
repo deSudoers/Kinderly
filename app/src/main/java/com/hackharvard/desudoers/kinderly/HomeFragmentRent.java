@@ -44,7 +44,6 @@ public class HomeFragmentRent extends Fragment {
         ft.replace(R.id.fragment, autocompleteFragment);
         ft.commit();
 
-
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -98,7 +97,7 @@ public class HomeFragmentRent extends Fragment {
     }
 
     private void goToFilterActivity(){
-//        Intent i = new Intent(getContext(), FilterActivity.class);
-//        startActivity(i);
+        Intent i = new Intent(getContext(), FilterActivity.class);
+        startActivity(i);
     }
 }
