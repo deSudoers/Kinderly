@@ -43,13 +43,10 @@ public class HomeFragmentRent extends Fragment {
         ft.replace(R.id.fragment, autocompleteFragment);
         ft.commit();
 
-        final TextView tv = (TextView) getView().findViewById(R.id.textView);
-
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                tv.setText(place.toString());
             }
 
             @Override
@@ -60,6 +57,7 @@ public class HomeFragmentRent extends Fragment {
         });
 
         ListView listView = (ListView) getView().findViewById(R.id.cardList);
+        listView.setNestedScrollingEnabled(true);
         listView.setDivider(null);
         CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getContext(), R.layout.list_item_card);
 
