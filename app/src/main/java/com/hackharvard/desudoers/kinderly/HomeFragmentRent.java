@@ -1,6 +1,10 @@
 package com.hackharvard.desudoers.kinderly;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -20,12 +25,13 @@ import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragmen
 
 import org.w3c.dom.Text;
 
+import java.net.URL;
+
 public class HomeFragmentRent extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstancestate) {
-
         return inflater.inflate(R.layout.fragment_home_rent,container,false);
     }
 
@@ -57,10 +63,21 @@ public class HomeFragmentRent extends Fragment {
         listView.setDivider(null);
         CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getContext(), R.layout.list_item_card);
 
-        for (int i = 0; i < 10; i++) {
-            Card card = new Card("Card " + (i+1) + " Line 1", "Card " + (i+1) + " Line 2");
+        String url = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg";
+        for (int i = 0; i < 5; i++) {
+
+            Card card = null;
+            card = new Card("Card " + (i+1) + " Line 1", "Card " + (i+1) + " Line 2", url);
             cardArrayAdapter.add(card);
+            listView.setAdapter(cardArrayAdapter);
         }
-        listView.setAdapter(cardArrayAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(getContext(), CardActivity.class);
+                startActivity(i);
+            }
+        });
     }
 }

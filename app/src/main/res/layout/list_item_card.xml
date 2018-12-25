@@ -9,25 +9,23 @@
     android:descendantFocusability="beforeDescendants">
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="129dp"
+        android:layout_width="359dp"
+        android:layout_height="348dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <android.support.v7.widget.CardView
-            android:layout_width="332dp"
-            android:layout_height="109dp"
+            android:layout_width="337dp"
+            android:layout_height="348dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            card_view:cardElevation="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            card_view:cardElevation="5dp">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -35,20 +33,21 @@
 
                 <TextView
                     android:id="@+id/line1"
-                    android:layout_width="300dp"
-                    android:layout_height="31dp"
+                    android:layout_width="310dp"
+                    android:layout_height="34dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="252dp"
                     android:layout_marginEnd="8dp"
                     android:text="TextView"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/line2"
-                    android:layout_width="299dp"
-                    android:layout_height="29dp"
+                    android:layout_width="308dp"
+                    android:layout_height="34dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
@@ -56,8 +55,19 @@
                     android:text="TextView"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/line1" />
+                    app:layout_constraintTop_toBottomOf="@+id/line1"
+                    app:layout_constraintVertical_bias="0.918" />
+
+                <ImageView
+                    android:id="@+id/roomPhoto"
+                    android:layout_width="0dp"
+                    android:layout_height="219dp"
+                    tools:layout_editor_absoluteX="-2dp"
+                    tools:layout_editor_absoluteY="7dp"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
 
