@@ -52,17 +52,17 @@ public class LoginActivity extends AppCompatActivity{
     private View mProgressView;
     private View mLoginFormView;
 
-    private SharedPreferences sp;
+    private SharedPreferences sp_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        sp = getSharedPreferences("login", MODE_PRIVATE);
+        sp_login = getSharedPreferences("login", MODE_PRIVATE);
 
-        if(sp.getBoolean("logged", false)) {
-//            goToRentActivity();
+        if(sp_login.getBoolean("logged", false)) {
+            goToRentActivity();
 //            goToLetActivity();
         }
 
@@ -243,7 +243,7 @@ public class LoginActivity extends AppCompatActivity{
 
             if (success) {
                 finish();
-//                goToRentActivity();
+                goToRentActivity();
 //                goToLetActivity();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

@@ -6,15 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
     tools:context=".RentActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="220dp"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -31,20 +28,74 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="57dp"
+                android:layout_height="120dp"
+                android:layout_gravity="bottom"
+                app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                android:layout_gravity="bottom">
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
-                <fragment
-                    android:id="@+id/fragment"
-                    android:name="com.hackharvard.desudoers.kinderly.EmptyFragment"
+                <TableLayout
+                    android:id="@+id/tabla_cuerpo"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:stretchColumns="*">
 
+                    <TableRow
+                        android:id="@+id/tabla_cabecera"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <fragment
+                            android:id="@+id/fragment"
+                            android:name="com.hackharvard.desudoers.kinderly.EmptyFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_gravity="top"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_span="2" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tabla_cabecera2"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="@color/common_google_signin_btn_text_dark_default">
+
+                        <Button
+                            android:id="@+id/filter"
+                            style="?android:textAppearanceSmall"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="-5dip"
+                            android:layout_marginTop="-7dip"
+                            android:layout_marginRight="-5dip"
+                            android:layout_marginBottom="-7dip"
+                            android:background="@color/common_google_signin_btn_text_dark_default"
+                            android:text="@string/action_filter"
+                            android:textColor="@color/colorAccent"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/sort"
+                            style="?android:textAppearanceSmall"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="-5dip"
+                            android:layout_marginTop="-7dip"
+                            android:layout_marginRight="-5dip"
+                            android:layout_marginBottom="-7dip"
+                            android:background="@color/common_google_signin_btn_text_dark_default"
+                            android:text="@string/action_sort"
+                            android:textColor="@color/colorAccent"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+
+                </TableLayout>
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
