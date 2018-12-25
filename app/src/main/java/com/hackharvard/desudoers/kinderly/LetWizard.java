@@ -3,6 +3,7 @@ package com.hackharvard.desudoers.kinderly;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.aware.WifiAwareSession;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -25,6 +27,10 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
     TextView pageTitle;
     private SharedPreferences sp;
 
+    WizRoomCount wrc = new WizRoomCount();
+    WizAddress waddr = new WizAddress();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +41,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         prevButton.setOnClickListener(this);
 
         sp = getSharedPreferences("letRooms",MODE_PRIVATE);
-        sp.edit().putInt("numOfRooms",3).apply();
+        sp.edit().putInt("numOfRooms",1).apply();
 
         pageTitle = findViewById(R.id.pageTitle);
         pageTitle.setText("Greetings!");
@@ -60,6 +66,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         switch(view.getId())
         {
             case R.id.nextButton:
+                updateValues(pageNumber);
                 if(pageNumber+1>numOfPages+numOfRooms)
                     break;
                 pageNumber++;
@@ -74,20 +81,29 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    private void updateValues(int pageNumber) {
+        FragmentManager manager = getSupportFragmentManager();
+        switch (pageNumber){
+            case 1: break;
+            case 3: numOfRooms = wrc.getNumberOfRooms();
+                    break;
+
+        }
+    }
+
     private void useFragment(int pageNumber) {
         int page;
-        numOfRooms = sp.getInt("numOfRooms",1);
         if(pageNumber > 3 && pageNumber <= 3+numOfRooms)
             page = 4;
         else
             page = pageNumber;
         switch (page)
         {
-            case 1: loadFragment(new WizAddress());
+            case 1: loadFragment(waddr);
                     break;
             case 2: loadFragment(new WizPictures());
                     break;
-            case 3: loadFragment(new WizRoomCount());
+            case 3: loadFragment(wrc);
                     break;
             case 4: loadFragment(new WizRoom().newInstance(pageNumber-3));
                     break;
