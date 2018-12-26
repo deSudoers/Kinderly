@@ -13,7 +13,7 @@ public class WizRoom extends Fragment{
     int roomNumber;
     TextView pageTitle;
 
-    public static final WizRoom newInstance(int roomNumber) {
+    public final WizRoom newInstance(int roomNumber) {
         WizRoom wr =  new WizRoom();
         Bundle bundle = new Bundle(1);
         bundle.putInt("roomNumber",roomNumber);
