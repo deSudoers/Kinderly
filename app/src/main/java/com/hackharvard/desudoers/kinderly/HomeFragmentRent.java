@@ -63,13 +63,16 @@ public class HomeFragmentRent extends Fragment {
         CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getContext(), R.layout.list_item_card);
 
         String url = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg";
-        for (int i = 0; i < 5; i++) {
+        String url2 = "https://nroer.gov.in/media/e/a/c/c4ce9ba9211d05e48f0bf447a346dde5f0c79a31c163d540ce9c282b43138.jpeg";
+        String urls[] = {url, url2};
+
+        for (int i = 0; i < 10; i++) {
 
             Card card = null;
-            card = new Card("Card " + (i+1) + " Line 1", "Card " + (i+1) + " Line 2", url);
+            card = new Card("Card " + (i+1) + " Line 1", "Card " + (i+1) + " Line 2", urls);
             cardArrayAdapter.add(card);
-            listView.setAdapter(cardArrayAdapter);
         }
+        listView.setAdapter(cardArrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

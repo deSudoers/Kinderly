@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,7 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
     static class CardViewHolder {
         TextView line1;
         TextView line2;
-        ImageView image;
+        ViewPager image;
     }
 
     public CardArrayAdapter(Context context, int textViewResourceId) {
@@ -56,7 +57,7 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
             viewHolder = new CardViewHolder();
             viewHolder.line1 = (TextView) row.findViewById(R.id.line1);
             viewHolder.line2 = (TextView) row.findViewById(R.id.line2);
-            viewHolder.image = (ImageView) row.findViewById(R.id.roomPhoto);
+            viewHolder.image = (ViewPager) row.findViewById(R.id.view_pager);
             row.setTag(viewHolder);
         } else {
             viewHolder = (CardViewHolder)row.getTag();
@@ -65,39 +66,10 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
 
         viewHolder.line1.setText(card.getLine1());
         viewHolder.line2.setText(card.getLine2());
+        ImageAdapter adapter = new ImageAdapter(getContext(), card.getImages());
+        viewHolder.image.setAdapter(adapter);
 
-        class setBitmapImage extends AsyncTask<String, Void, Bitmap> {
-            @Override
-            protected Bitmap doInBackground(String... params) {
-                Bitmap bitmap = null;
-                try {
-                    URL url = new URL(params[0]);
-                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                }
-                catch (Exception e){
-                    Log.e("imagere", e.toString());
-                }
-                Log.e("imagare", "here");
-                return bitmap;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap result) {
-                super.onPostExecute(result);
-                viewHolder.image.setImageBitmap(result);
-                Log.e("imagere", result.toString());
-            }
-        }
-        try {
-            new setBitmapImage().execute(card.getURL());
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
         return row;
     }
 
-    public Bitmap decodeToBitmap(byte[] decodedByte) {
-        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
-    }
 }
