@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +32,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +70,7 @@ public class LoginActivity extends AppCompatActivity{
         sp_login = getSharedPreferences("login", MODE_PRIVATE);
 
         if(sp_login.getBoolean("logged", false)) {
-            goToRentActivity();
+//            goToRentActivity();
 //            goToLetActivity();
         }
 
@@ -117,7 +125,6 @@ public class LoginActivity extends AppCompatActivity{
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String number = mNumberView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -130,12 +137,23 @@ public class LoginActivity extends AppCompatActivity{
             cancel = true;
         }
 
+        long number = 0;
         // Check for a valid number address.
-        if (TextUtils.isEmpty(number)) {
-            mNumberView.setError(getString(R.string.error_field_required));
-            focusView = mNumberView;
-            cancel = true;
-        } else if (!isNumberValid(number)) {
+        try {
+            number = Long.parseLong(mNumberView.getText().toString());
+            // Check for a valid number.
+            if (TextUtils.isEmpty(number + "")) {
+                mNumberView.setError(getString(R.string.error_field_required));
+                focusView = mNumberView;
+                cancel = true;
+            } else if (!isNumberValid(number + "")) {
+                mNumberView.setError(getString(R.string.error_invalid_number));
+                focusView = mNumberView;
+                cancel = true;
+            }
+        }
+        catch (NumberFormatException nfe){
+            nfe.printStackTrace();
             mNumberView.setError(getString(R.string.error_invalid_number));
             focusView = mNumberView;
             cancel = true;
@@ -149,7 +167,7 @@ public class LoginActivity extends AppCompatActivity{
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(number, password);
+            mAuthTask = new UserLoginTask(number, password, getString(R.string.url)+"login");
             mAuthTask.execute((Void) null);
         }
     }
@@ -203,51 +221,83 @@ public class LoginActivity extends AppCompatActivity{
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
-        private final String mNumber;
+        private final long mNumber;
         private final String mPassword;
+        private final String mUrl;
 
-        UserLoginTask(String number, String password) {
+        UserLoginTask(long number, String password, String url) {
             mNumber = number;
             mPassword = password;
+            mUrl = url;
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            String data = "Error";
+            JSONObject postData = new JSONObject();
+            try{
+                postData.put("mobile", mNumber);
+                postData.put("password", mPassword);
+                HttpURLConnection httpURLConnection = null;
+                try {
+                    httpURLConnection = (HttpURLConnection) new URL(mUrl).openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setRequestProperty("Content-Type", "application/json");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                    wr.writeBytes(postData.toString());
+                    wr.flush();
+                    wr.close();
+                    String cookie3 = httpURLConnection.getHeaderField(3);
+                    String cookie = httpURLConnection.getHeaderField("Set-Cookie");
+                    sp_login.edit().putString("token", cookie).apply();
+                    sp_login.edit().putString("token2", cookie3).apply();
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                    int response = httpURLConnection.getResponseCode();
+                    if(response == HttpURLConnection.HTTP_OK){
+                        data = "Login Successful.";
+                    }
+                    else if(response == HttpURLConnection.HTTP_BAD_REQUEST){
+                        data = "Login Unsuccessful.";
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("login", e.toString());
+                }
+                finally {
+                    if (httpURLConnection != null) {
+                        httpURLConnection.disconnect();
+                    }
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
             }
 
-//            for (String credential : DUMMY_CREDENTIALS) {
-//                String[] pieces = credential.split(":");
-//                if (pieces[0].equals(mNumber)) {
-//                    // Account exists, return true if the password matches.
-//                    return pieces[1].equals(mPassword);
-//                }
-//            }
-
-            // TODO: register the new account here.
-            return true;
+            return data;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final String success) {
             mAuthTask = null;
             showProgress(false);
-
-            if (success) {
-                finish();
-                goToRentActivity();
-//                goToLetActivity();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+            Log.e("login", success);
+            switch (success) {
+                case "Login Successful.":
+                    finish();
+//                    goToRentActivity();
+//                    goToLetActivity();
+                    sp_login.edit().putBoolean("logged", true).apply();
+                    break;
+                default:
+                    Snackbar.make(getWindow().getDecorView().getRootView(), success, Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    break;
             }
         }
 
