@@ -5,6 +5,7 @@
     <string name="prompt_password">Password</string>
     <string name="prompt_first_name">First Name</string>
     <string name="prompt_last_name">Last Name</string>
+    <string name="prompt_age">Age</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_sign_up">Sign up</string>
@@ -13,6 +14,7 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_invalid_number">This number is invalid</string>
+    <string name="error_invalid_age">This age is invalid</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
@@ -150,5 +152,7 @@
     <string name="rooms">Rooms</string>
     <string name="capacity">Capacity</string>
     <string name="attached_bath">Attached Bathroom</string>
+
+    <string name="url">http://142.93.210.210:5000/</string>
 </resources>
 

@@ -3,6 +3,7 @@ package com.hackharvard.desudoers.kinderly;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +31,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,19 +51,26 @@ public class RegisterActivity extends AppCompatActivity {
     // UI references.
     private EditText mFNameView;
     private EditText mLNameView;
+    private EditText mAgeView;
     private EditText mNumberView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
+    private SharedPreferences sp_login;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        sp_login = getSharedPreferences("login", MODE_PRIVATE);
+
         setupActionBar();
         // Set up the login form.
         mFNameView = (EditText) findViewById(R.id.firstname);
-        mLNameView = (EditText) findViewById(R.id.lastname); 
+        mLNameView = (EditText) findViewById(R.id.lastname);
+        mAgeView = (EditText) findViewById(R.id.age);
         mNumberView = (EditText) findViewById(R.id.number);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -100,6 +114,8 @@ public class RegisterActivity extends AppCompatActivity {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptRegister() {
+        String response = "Invalid Attempt";
+
         if (mAuthTask != null) {
             return;
         }
@@ -107,13 +123,13 @@ public class RegisterActivity extends AppCompatActivity {
         // Reset errors.
         mFNameView.setError(null);
         mLNameView.setError(null);
+        mAgeView.setError(null);
         mNumberView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
         String firstname = mFNameView.getText().toString();
         String lastname = mLNameView.getText().toString();
-        String number = mNumberView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -126,14 +142,40 @@ public class RegisterActivity extends AppCompatActivity {
             cancel = true;
         }
 
-        // Check for a valid number.
-        if (TextUtils.isEmpty(number)) {
-            mNumberView.setError(getString(R.string.error_field_required));
-            focusView = mNumberView;
-            cancel = true;
-        } else if (!isNumberValid(number)) {
+        long number = 0;
+        try {
+            number = Long.parseLong(mNumberView.getText().toString());
+            // Check for a valid number.
+            if (TextUtils.isEmpty(number + "")) {
+                mNumberView.setError(getString(R.string.error_field_required));
+                focusView = mNumberView;
+                cancel = true;
+            } else if (!isNumberValid(number + "")) {
+                mNumberView.setError(getString(R.string.error_invalid_number));
+                focusView = mNumberView;
+                cancel = true;
+            }
+        }
+        catch (NumberFormatException nfe){
+            nfe.printStackTrace();
             mNumberView.setError(getString(R.string.error_invalid_number));
             focusView = mNumberView;
+            cancel = true;
+        }
+
+        int age = 0;
+        try {
+            age = Integer.parseInt(mAgeView.getText().toString());
+            if (TextUtils.isEmpty(age + "")) {
+                mAgeView.setError(getString(R.string.error_field_required));
+                focusView = mAgeView;
+                cancel = true;
+            }
+        }
+        catch (NumberFormatException nfe){
+            nfe.printStackTrace();
+            mAgeView.setError(getString(R.string.error_invalid_age));
+            focusView = mAgeView;
             cancel = true;
         }
 
@@ -157,7 +199,7 @@ public class RegisterActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(number, password);
+            mAuthTask = new UserLoginTask(firstname, lastname, age, number, password, getString(R.string.url)+"register");
             mAuthTask.execute((Void) null);
         }
     }
@@ -212,50 +254,93 @@ public class RegisterActivity extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
-        private final String mNumber;
+        private final String mFirstName;
+        private final String mLastName;
+        private final int mAge;
+        private final long mNumber;
         private final String mPassword;
+        private final String mUrl;
 
-        UserLoginTask(String number, String password) {
+        UserLoginTask(String firstName, String lastName, int age, long number, String password, String url) {
+            mFirstName = firstName;
+            mLastName = lastName;
+            mAge = age;
             mNumber = number;
             mPassword = password;
+            mUrl = url;
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            String data = "";
+            JSONObject postData = new JSONObject();
+            try{
+                postData.put("first_name", mFirstName);
+                postData.put("last_name", mLastName);
+                postData.put("age", mAge);
+                postData.put("mobile", mNumber);
+                postData.put("password", mPassword);
+                HttpURLConnection httpURLConnection = null;
+                try {
+                    httpURLConnection = (HttpURLConnection) new URL(mUrl).openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setRequestProperty("Content-Type", "application/json");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                    wr.writeBytes(postData.toString());
+                    wr.flush();
+                    wr.close();
+                    String cookie3 = httpURLConnection.getHeaderField(3);
+                    String cookie = httpURLConnection.getHeaderField("Set-Cookie");
+                    sp_login.edit().putString("token", cookie).apply();
+                    sp_login.edit().putString("token2", cookie3).apply();
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                    int response = httpURLConnection.getResponseCode();
+                    if(response == HttpURLConnection.HTTP_OK){
+                        data = "Register Successful.";
+                    }
+                    else if(response == HttpURLConnection.HTTP_BAD_REQUEST){
+                        data = "Mobile Number Already Exists.";
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    if (httpURLConnection != null) {
+                        httpURLConnection.disconnect();
+                    }
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
             }
 
-//            for (String credential : DUMMY_CREDENTIALS) {
-//                String[] pieces = credential.split(":");
-//                if (pieces[0].equals(mNumber)) {
-//                    // Account exists, return true if the password matches.
-//                    return pieces[1].equals(mPassword);
-//                }
-//            }
-
-            // TODO: register the new account here.
-            return true;
+            return data;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final String success) {
             mAuthTask = null;
             showProgress(false);
-
-            if (success) {
-                finish();
-                goToMainActivity();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+            switch (success) {
+                case "Register Successful.":
+                    finish();
+                    goToMainActivity();
+                    sp_login.edit().putBoolean("logged", true).apply();
+                    break;
+                case "Mobile Number Already Exists.":
+                    mPasswordView.setError(success);
+                    mNumberView.requestFocus();
+                    break;
+                default:
+                    Snackbar.make(getWindow().getDecorView().getRootView(), success, Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    break;
             }
         }
 
