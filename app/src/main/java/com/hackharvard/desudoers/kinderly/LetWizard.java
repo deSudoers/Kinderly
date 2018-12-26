@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -45,8 +46,8 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         nextButton.setOnClickListener(this);
         prevButton.setOnClickListener(this);
 
-        sp = getSharedPreferences("letRooms",MODE_PRIVATE);
-        sp.edit().putInt("numOfRooms",1).apply();
+        sp = getSharedPreferences("letProperty",MODE_PRIVATE);
+        sp.edit().putInt("numOfRooms",numOfRooms).apply();
 
         pageTitle = findViewById(R.id.pageTitle);
         pageTitle.setText("Greetings!");
@@ -87,37 +88,39 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
     }
 
     private void updateValues() {
-        FragmentManager manager = getSupportFragmentManager();
-        switch (pageNumber){
+        int page = getPage();
+        switch (page){
             case 1: waddr.getData();
                     break;
             case 3: numOfRooms = wrc.getNumberOfRooms();
+                    sp.edit().putInt("numOfRooms",numOfRooms).apply();
                     if(wr.size()<numOfRooms)
                         for(int i=0;i<numOfRooms;i++) {
-                            wr.add(new WizRoom());
+                            wr.add(new WizRoom().newInstance(i+1));
                         }
+                    sp.edit().putString("roomInfo",null).apply();
                     break;
-
+            case 4: try{
+                        wr.get(pageNumber-4).getData();
+                    }
+                    catch(Exception e) {
+                        Log.e("XYZ",e.toString());
+                    }
+                    break;
         }
     }
 
     private void useFragment() {
-        int page;
-        if(pageNumber > 3 && pageNumber <= 3+numOfRooms)
-            page = 4;
-        else if(pageNumber>3+numOfRooms)
-            page = pageNumber-numOfRooms+1;
-        else
-            page = pageNumber;
+        int page = getPage();
         switch (page)
         {
             case 1: loadFragment(waddr);
                     break;
-            case 2: loadFragment(new WizPictures());
+            case 2: loadFragment(wpics);
                     break;
             case 3: loadFragment(wrc);
                     break;
-            case 4: loadFragment(wr.get(pageNumber-4).newInstance(pageNumber-3));
+            case 4: loadFragment(wr.get(pageNumber-4));
                     break;
             case 5: if(numOfRooms>0)
                         loadFragment(wef);
@@ -125,6 +128,17 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                         pageNumber--;
                     break;
         }
+    }
+
+    private int getPage() {
+        int page;
+        if(pageNumber > 3 && pageNumber <= 3+numOfRooms)
+            page = 4;
+        else if(pageNumber>3+numOfRooms)
+            page = pageNumber-numOfRooms+1;
+        else
+            page = pageNumber;
+        return page;
     }
 
     private void loadFragment(Fragment fragment)
