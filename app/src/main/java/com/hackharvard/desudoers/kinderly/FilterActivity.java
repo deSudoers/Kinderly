@@ -41,6 +41,19 @@ public class FilterActivity extends AppCompatActivity {
     private EditText text_location, text_range, text_rooms, text_capacity, text_attachedbathroom, text_clear;
     private Point size;
 
+    private String location;
+    private String location_name;
+    private boolean location_bool;
+    private float minValue;
+    private float maxValue;
+    private boolean range_bool;
+    private int rooms;
+    private boolean rooms_bool;
+    private int capacity;
+    private boolean capacity_bool;
+    private int attachedbathroom;
+    private boolean attachedbathroom_bool;
+
     private SharedPreferences sp_filter;
 
 
@@ -56,6 +69,19 @@ public class FilterActivity extends AppCompatActivity {
         mApplyFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sp_filter.edit().putString("location", location).apply();
+                sp_filter.edit().putString("location_name", location_name).apply();
+                sp_filter.edit().putBoolean("location_bool", location_bool).apply();
+                sp_filter.edit().putFloat("minValue", minValue).apply();
+                sp_filter.edit().putFloat("maxValue", maxValue).apply();
+                sp_filter.edit().putBoolean("range_bool", range_bool).apply();
+                sp_filter.edit().putInt("rooms", rooms).apply();
+                sp_filter.edit().putBoolean("rooms_bool", rooms_bool).apply();
+                sp_filter.edit().putInt("capacity", capacity).apply();
+                sp_filter.edit().putBoolean("capacity_bool", capacity_bool).apply();
+                sp_filter.edit().putInt("attachedbathroom", attachedbathroom).apply();
+                sp_filter.edit().putBoolean("attachedbathroom_bool", attachedbathroom_bool).apply();
+
                 goToRentActivity();
             }
         });
@@ -87,10 +113,27 @@ public class FilterActivity extends AppCompatActivity {
         text_clear = view_clear.findViewById(R.id.etSearchToolbar);
         text_clear.setText("Clear");
 
+        sp_filter = getSharedPreferences("filter", MODE_PRIVATE);
+
+        location = sp_filter.getString("location", "");
+        location_name = sp_filter.getString("location_name", "");
+        location_bool = sp_filter.getBoolean("location_bool", false);
+        minValue = sp_filter.getFloat("minValue", 0.0f);
+        maxValue = sp_filter.getFloat("maxValue", 99.99f);
+        range_bool = sp_filter.getBoolean("range_bool", false);
+        rooms = sp_filter.getInt("rooms", 1);
+        rooms_bool = sp_filter.getBoolean("rooms_bool", false);
+        capacity = sp_filter.getInt("capacity", 1);
+        capacity_bool = sp_filter.getBoolean("capacity_bool", false);
+        attachedbathroom = sp_filter.getInt("attachedbathroom", 1);
+        attachedbathroom_bool = sp_filter.getBoolean("attachedbathroom_bool", false);
+
+        refresh();
+
         button_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sp_filter.edit().putBoolean("location_bool", false).apply();
+                location_bool = false;
                 autocompleteFragment.setText("");
                 refresh();
             }
@@ -99,9 +142,9 @@ public class FilterActivity extends AppCompatActivity {
         button_range.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sp_filter.edit().putFloat("minValue", 0.00f).apply();
-                sp_filter.edit().putFloat("maxValue", 99.99f).apply();
-                sp_filter.edit().putBoolean("range_bool", false).apply();
+                minValue = 0f;
+                maxValue = 99.99f;
+                range_bool = false;
                 mSeekBarRange.setSelectedMinValue(0.0f);
                 mSeekBarRange.setSelectedMaxValue(99.99f);
                 mSeekBarRangeMin.setText("Rs 0.0k");
@@ -113,7 +156,7 @@ public class FilterActivity extends AppCompatActivity {
         button_rooms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sp_filter.edit().putBoolean("rooms_bool", false).apply();
+                rooms_bool = false;
                 mSeekBarRoom.setProgress(0);
                 refresh();
             }
@@ -122,7 +165,7 @@ public class FilterActivity extends AppCompatActivity {
         button_capacity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sp_filter.edit().putBoolean("capacity_bool", false).apply();
+                capacity_bool = false;
                 mSeekBarCapacity.setProgress(0);
                 refresh();
             }
@@ -131,7 +174,7 @@ public class FilterActivity extends AppCompatActivity {
         button_attachedbathroom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sp_filter.edit().putBoolean("attachedbathroom_bool", false).apply();
+                attachedbathroom_bool = false;
                 mAttachedBathroom.setChecked(false);
                 refresh();
             }
@@ -140,31 +183,37 @@ public class FilterActivity extends AppCompatActivity {
         text_clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sp_filter.edit().putBoolean("location_bool", false).apply();
-                sp_filter.edit().putBoolean("range_bool", false).apply();
-                sp_filter.edit().putBoolean("rooms_bool", false).apply();
-                sp_filter.edit().putBoolean("capacity_bool", false).apply();
-                sp_filter.edit().putBoolean("attachedbathroom_bool", false).apply();
+                location_bool = false;
+                autocompleteFragment.setText("");
+                minValue = 0f;
+                maxValue = 99.99f;
+                range_bool = false;
+                mSeekBarRange.setSelectedMinValue(0.0f);
+                mSeekBarRange.setSelectedMaxValue(99.99f);
+                mSeekBarRangeMin.setText("Rs 0.0k");
+                mSeekBarRangeMax.setText("Rs 99.99k");
+                rooms_bool = false;
+                mSeekBarRoom.setProgress(0);
+                capacity_bool = false;
+                mSeekBarCapacity.setProgress(0);
+                attachedbathroom_bool = false;
+                mAttachedBathroom.setChecked(false);
                 refresh();
             }
         });
 
-        sp_filter = getSharedPreferences("filter", MODE_PRIVATE);
-
-        refresh();
-
         autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         autocompleteFragment.setHint(getString(R.string.search_by_location));
-        if(sp_filter.getBoolean("location_bool", false)){
-            autocompleteFragment.setText(sp_filter.getString("location", ""));
+        if(location_bool){
+            autocompleteFragment.setText(location_name);
         }
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                sp_filter.edit().putBoolean("location_bool", true).apply();
-                sp_filter.edit().putString("location_name", place.getName().toString()).apply();
-                sp_filter.edit().putString("location", place.getAddress().toString()).apply();
+                location_bool = true;
+                location_name = place.getName().toString();
+                location =  place.getAddress().toString();
                 refresh();
             }
 
@@ -181,18 +230,16 @@ public class FilterActivity extends AppCompatActivity {
         mSeekBarRangeMax = (TextView) findViewById(R.id.seekbarmax);
         mSeekBarRangeMin.setText("Rs 0.0k");
         mSeekBarRangeMax.setText("Rs 99.99k");
-        sp_filter.edit().putFloat("minValue", 0.0f).apply();
-        sp_filter.edit().putFloat("maxValue", 99.99f).apply();
 
         mSeekBarRange.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Float>() {
             @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Float minValue, Float maxValue) {
+            public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Float minValue1, Float maxValue1) {
                 //Now you have the minValue and maxValue of your RangeSeekbar
                 mSeekBarRangeMin.setText("Rs "+minValue+"k");
                 mSeekBarRangeMax.setText("Rs "+maxValue+"k");
-                sp_filter.edit().putFloat("minValue", minValue).apply();
-                sp_filter.edit().putFloat("maxValue", maxValue).apply();
-                sp_filter.edit().putBoolean("range_bool", true).apply();
+                minValue = minValue1;
+                maxValue = maxValue1;
+                range_bool = true;
                 refresh();
             }
         });
@@ -208,8 +255,8 @@ public class FilterActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(fromUser) {
-                    sp_filter.edit().putBoolean("rooms_bool", true).apply();
-                    sp_filter.edit().putInt("rooms", progress + 1).apply();
+                    rooms_bool = true;
+                    rooms = progress + 1;
                     refresh();
                 }
             }
@@ -229,8 +276,8 @@ public class FilterActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(fromUser) {
-                    sp_filter.edit().putBoolean("capacity_bool", true).apply();
-                    sp_filter.edit().putInt("capacity", progress + 1).apply();
+                    capacity_bool = true;
+                    capacity = progress + 1;
                     refresh();
                 }
             }
@@ -249,8 +296,8 @@ public class FilterActivity extends AppCompatActivity {
         mAttachedBathroom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sp_filter.edit().putBoolean("attachedbathroom_bool", true).apply();
-                sp_filter.edit().putInt("attachedbathroom", mAttachedBathroom.isChecked() ? 1 : 0).apply();
+                attachedbathroom_bool = true;
+                attachedbathroom = mAttachedBathroom.isChecked() ? 1 : 0;
                 refresh();
             }
         });
@@ -268,16 +315,16 @@ public class FilterActivity extends AppCompatActivity {
         boolean flag = false;
         float width = 0;
         int row = 0;
-        if(sp_filter.getBoolean("location_bool", false)){
+        if(location_bool){
             flag = true;
             linearLayout1.addView(view_location);
-            text_location.setText(sp_filter.getString("location_name", ""));
+            text_location.setText(location_name);
             width += textToWidth(text_location.getText().toString());
         }
 
-        if(sp_filter.getBoolean("range_bool", false)){
+        if(range_bool){
             flag = true;
-            text_range.setText(sp_filter.getFloat("minValue", 0.0f)+"k -"+sp_filter.getFloat("maxValue", 99.99f)+"k");
+            text_range.setText(minValue+"k - "+ maxValue +"k");
             width += 385;
             if(width > size.x - 200) {
                 width = 385;
@@ -288,9 +335,9 @@ public class FilterActivity extends AppCompatActivity {
                 linearLayout1.addView(view_range);
         }
 
-        if(sp_filter.getBoolean("rooms_bool", false)){
+        if(rooms_bool){
             flag = true;
-            text_rooms.setText("Rooms: "+sp_filter.getInt("rooms", 1));
+            text_rooms.setText("Rooms: " + rooms);
             width += 320;
             if(width > size.x - 200){
                 width = 320;
@@ -311,9 +358,9 @@ public class FilterActivity extends AppCompatActivity {
             }
         }
 
-        if(sp_filter.getBoolean("capacity_bool", false)){
+        if(capacity_bool){
             flag = true;
-            text_capacity.setText("Capacity: "+sp_filter.getInt("capacity", 1));
+            text_capacity.setText("Capacity: " + capacity);
             width += 350;
             if(width > size.x - 200){
                 width = 350;
@@ -337,9 +384,9 @@ public class FilterActivity extends AppCompatActivity {
             }
         }
 
-        if(sp_filter.getBoolean("attachedbathroom_bool", false)){
+        if(attachedbathroom_bool){
             flag = true;
-            text_attachedbathroom.setText(sp_filter.getInt("attachedbathroom", 0) == 1 ? "Attached Bathroom" : "No Bathroom");
+            text_attachedbathroom.setText(attachedbathroom == 1 ? "Attached Bathroom" : "No Bathroom");
             width += textToWidth(text_attachedbathroom.getText().toString());
             if(width > size.x - 200){
                 width = textToWidth(text_attachedbathroom.getText().toString());
@@ -386,7 +433,6 @@ public class FilterActivity extends AppCompatActivity {
     }
     
     private int textToWidth(String text){
-        Log.e("sizeee", text.length()*18+110+text);
         return text.length()*18+110;
     }
 }

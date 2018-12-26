@@ -155,6 +155,9 @@
     <string name="capacity">Capacity</string>
     <string name="attached_bath">Attached Bathroom</string>
 
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+
     <string name="url">http://142.93.210.210:5000/</string>
 </resources>
 
