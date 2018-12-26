@@ -28,6 +28,25 @@
     <string name="title_responses">Responses</string>
     <string name="title_profile">Profile</string>
     <string name="age">Age</string>
+    <string name="next">Next</string>
+    <string name="prev">Back</string>
+    <string name="titleAddr">Address</string>
+    <string name="titlePics">Add a few pictures</string>
+    <string name="type">Type</string>
+    <string name="apt">Apartment</string>
+    <string name="bung">Bungalow</string>
+    <string name="block_no">Block Number</string>
+    <string name="building_name">Building Name</string>
+    <string name="street_name">Street Name</string>
+    <string name="state">State</string>
+    <string name="city">City</string>
+    <string name="room_count_title">How many rooms do you want to let?</string>
+    <string name="room_count">Number of rooms</string>
+    <string name="bathroom">Attached Bathroom</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ac">AC</string>
+    <string name="heater">Heater</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -132,3 +151,4 @@
     <string name="capacity">Capacity</string>
     <string name="attached_bath">Attached Bathroom</string>
 </resources>
+

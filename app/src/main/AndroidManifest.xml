@@ -52,6 +52,9 @@
             android:name=".FilterActivity"
             android:label="@string/title_activity_filter">
         </activity>
+        <activity
+            android:name=".LetWizard"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>
