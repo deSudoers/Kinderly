@@ -49,6 +49,13 @@ public class WizAddress extends Fragment{
         sp.edit().putString("street",street.getText().toString()).apply();
         sp.edit().putString("city",city.getText().toString()).apply();
         sp.edit().putString("state",state.getText().toString()).apply();
+        String address = blockNo.getText().toString();
+        address += "," + building.getText().toString();
+        address += "," + street.getText().toString();
+        address += "," + city.getText().toString();
+        address += "," + state.getText().toString();
+        address = "{\"address\":\""+address+"\",\"price\":999}";
+        sp.edit().putString("property",address).apply();
         if(apt.isChecked())
             sp.edit().putString("type","Apartment").apply();
         else if(bung.isChecked())
