@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 public class WizAddress extends Fragment{
     TextView pageTitle;
     EditText blockNo;
@@ -44,18 +46,27 @@ public class WizAddress extends Fragment{
     {
         SharedPreferences sp;
         sp = getActivity().getSharedPreferences("letProperty",Context.MODE_PRIVATE);
-        sp.edit().putString("blockNo",blockNo.getText().toString()).apply();
-        sp.edit().putString("building",building.getText().toString()).apply();
-        sp.edit().putString("street",street.getText().toString()).apply();
-        sp.edit().putString("city",city.getText().toString()).apply();
-        sp.edit().putString("state",state.getText().toString()).apply();
+//        sp.edit().putString("blockNo",blockNo.getText().toString()).apply();
+//        sp.edit().putString("building",building.getText().toString()).apply();
+//        sp.edit().putString("street",street.getText().toString()).apply();
+//        sp.edit().putString("city",city.getText().toString()).apply();
+//        sp.edit().putString("state",state.getText().toString()).apply();
         String address = blockNo.getText().toString();
         address += "," + building.getText().toString();
         address += "," + street.getText().toString();
         address += "," + city.getText().toString();
         address += "," + state.getText().toString();
-        address = "{\"address\":\""+address+"\",\"price\":999}";
-        sp.edit().putString("property",address).apply();
+        JSONObject addr = new JSONObject();
+        try{
+            addr.put("address",address);
+            addr.put("price",999);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        sp.edit().putString("property",addr.toString()).apply();
         if(apt.isChecked())
             sp.edit().putString("type","Apartment").apply();
         else if(bung.isChecked())
