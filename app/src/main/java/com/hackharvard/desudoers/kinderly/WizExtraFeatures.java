@@ -25,15 +25,15 @@ public class WizExtraFeatures extends Fragment {
 
         //For display purpose
         SharedPreferences sp = getActivity().getSharedPreferences("letProperty",Context.MODE_PRIVATE);
-        String s = sp.getString("blockNo","default");
-        s = s + ", " + sp.getString("building","default");
-        s = s + ", " + sp.getString("street","default");
-        s = s + ", " + sp.getString("city","default");
-        s = s + ", " + sp.getString("state","default");
-        s = s + ", " + sp.getString("type","default");
-        s = s + ", " + sp.getInt("numOfRooms",0);
-        s = sp.getString("roomInfo","default");
-        pageTitle.setText(sp.getString("property","default"));
+//        String s = sp.getString("blockNo","default");
+//        s = s + ", " + sp.getString("building","default");
+//        s = s + ", " + sp.getString("street","default");
+//        s = s + ", " + sp.getString("city","default");
+//        s = s + ", " + sp.getString("state","default");
+//        s = s + ", " + sp.getString("type","default");
+//        s = s + ", " + sp.getInt("numOfRooms",0);
+//        s = sp.getString("roomInfo","default");
+        pageTitle.setText(sp.getString("propAddress","default")+sp.getString("propRooms","default"));
 
 //        try {
 //            JSONObject jsonObject = new JSONObject(s);
