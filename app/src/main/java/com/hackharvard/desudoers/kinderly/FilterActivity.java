@@ -224,12 +224,17 @@ public class FilterActivity extends AppCompatActivity {
             }
         });
 
+
         mSeekBarRange = (RangeSeekBar<Float>) findViewById(R.id.rangeSeekbar);
         mSeekBarRange.setRangeValues(0.00f, 99.99f);
         mSeekBarRangeMin = (TextView) findViewById(R.id.seekbarmin);
         mSeekBarRangeMax = (TextView) findViewById(R.id.seekbarmax);
         mSeekBarRangeMin.setText("Rs 0.0k");
         mSeekBarRangeMax.setText("Rs 99.99k");
+        if(range_bool){
+            mSeekBarRange.setSelectedMinValue(minValue);
+            mSeekBarRange.setSelectedMaxValue(maxValue);
+        }
 
         mSeekBarRange.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Float>() {
             @Override
@@ -248,8 +253,19 @@ public class FilterActivity extends AppCompatActivity {
         mSeekBarRange.setNotifyWhileDragging(true);
 
         mSeekBarRoom = (SeekBar) findViewById(R.id.roomSeekbar);
+        if(rooms_bool){
+            mSeekBarRoom.setProgress(rooms - 1);
+        }
+
         mSeekBarCapacity = (SeekBar) findViewById(R.id.capacitySeekbar);
+        if(capacity_bool){
+            mSeekBarCapacity.setProgress(capacity - 1);
+        }
+
         mAttachedBathroom = (Switch) findViewById(R.id.attachedBathroom);
+        if(attachedbathroom_bool){
+            mAttachedBathroom.setChecked(attachedbathroom == 1);
+        }
 
         mSeekBarRoom.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
