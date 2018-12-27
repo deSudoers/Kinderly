@@ -22,11 +22,15 @@ import java.util.ArrayList;
 public class GridImageAdapter extends BaseAdapter {
     private Context mContext;
     public ArrayList<Uri> imgUri = new ArrayList<>();
-//    private Uri imgUri;
 
     public GridImageAdapter(Context c) {
 
         mContext = c;
+    }
+
+    public void getImageURI(Uri inputImage){
+
+        imgUri.add(inputImage);
     }
 
     public int getCount() {
@@ -58,28 +62,4 @@ public class GridImageAdapter extends BaseAdapter {
         imageView.setImageURI(imgUri.get(position));
         return imageView;
     }
-
-    public void getImageURI(Uri inputImage){
-        imgUri.add(inputImage);
-    }
-
-    // references to our images
-//    private Integer[] mThumbIds = {
-//            R.drawable.kinderly, R.drawable.kinderly,
-//            R.drawable.kinderly, R.drawable.kinderly,
-//            R.drawable.kinderly, R.drawable.kinderly,
-//            R.drawable.kinderly, R.drawable.kinderly,
-//            R.drawable.kinderly, R.drawable.kinderly
-//
-//    };
-    //            R.drawable.sample_4, R.drawable.sample_5,
-//            R.drawable.sample_6, R.drawable.sample_7,
-//            R.drawable.sample_0, R.drawable.sample_1,
-//            R.drawable.sample_2, R.drawable.sample_3,
-//            R.drawable.sample_4, R.drawable.sample_5,
-//            R.drawable.sample_6, R.drawable.sample_7,
-//            R.drawable.sample_0, R.drawable.sample_1,
-//            R.drawable.sample_2, R.drawable.sample_3,
-//            R.drawable.sample_4, R.drawable.sample_5,
-//            R.drawable.sample_6, R.drawable.sample_7
 }

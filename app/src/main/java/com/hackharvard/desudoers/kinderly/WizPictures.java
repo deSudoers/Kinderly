@@ -1,8 +1,10 @@
 package com.hackharvard.desudoers.kinderly;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +42,8 @@ public class WizPictures extends Fragment implements View.OnClickListener{
     Button camera;
     Button gallery;
     GridImageAdapter gridImageAdapter;
+    ArrayList<String> inputImages;
+    String inputImage;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstancestate) {
@@ -68,9 +73,14 @@ public class WizPictures extends Fragment implements View.OnClickListener{
         switch(view.getId())
         {
             case R.id.gallery:
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , 1);
+//                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(pickPhoto , 1);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"),1);
                 break;
 
             case R.id.camera:
@@ -79,12 +89,27 @@ public class WizPictures extends Fragment implements View.OnClickListener{
         }
     }
 
+    public void renderGridView()
+    {
+        imageGrid.setAdapter(gridImageAdapter);
+        if(gridImageAdapter.getCount()>=1 && gridImageAdapter.getCount()<=3) {
+//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_out));
+            pageTitle.setText("A few more would be amazing!");
+//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_in));
+        }
+        if(gridImageAdapter.getCount()>3) {
+//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_out));
+            pageTitle.setText("Already looks great!");
+//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_in));
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         switch(requestCode) {
             case 0:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
 
                     try {
                         Bitmap bitmap = (Bitmap) imageReturnedIntent.getExtras().get("data");
@@ -93,13 +118,11 @@ public class WizPictures extends Fragment implements View.OnClickListener{
 
 
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-                        File appDirectory = new File(Environment.getExternalStorageDirectory()+"/"+getString(R.string.app_name));
-                        if(!(appDirectory.exists() && appDirectory.isDirectory()))
-                        {
-                            try{
+                        File appDirectory = new File(Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name));
+                        if (!(appDirectory.exists() && appDirectory.isDirectory())) {
+                            try {
                                 appDirectory.mkdir();
-                            }
-                            catch (SecurityException e) {
+                            } catch (SecurityException e) {
                                 e.printStackTrace();
                             }
                         }
@@ -130,29 +153,51 @@ public class WizPictures extends Fragment implements View.OnClickListener{
 
                 break;
             case 1:
-                if(resultCode == RESULT_OK){
-                    Uri selectedImage = imageReturnedIntent.getData();
-//                    SharedPreferences sp = getActivity().getSharedPreferences("propertyPics",Context.MODE_PRIVATE);
-//                    sp.edit().putString("images",selectedImage.toString()).apply();
-                    gridImageAdapter.getImageURI(selectedImage);
-                    renderGridView();
-                }
-                break;
-        }
-    }
+                if (resultCode == RESULT_OK) {
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    inputImages = new ArrayList<String>();
+                    if (imageReturnedIntent.getData() != null) {
+                        Uri mImageUri = imageReturnedIntent.getData();
+                        Cursor cursor = getActivity().getContentResolver().query(mImageUri,
+                                filePathColumn, null, null, null);
+                        cursor.moveToFirst();
 
-    public void renderGridView()
-    {
-        imageGrid.setAdapter(gridImageAdapter);
-        if(gridImageAdapter.getCount()>=1 && gridImageAdapter.getCount()<=3) {
-//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_out));
-            pageTitle.setText("A few more would be amazing!");
-//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_in));
-        }
-        if(gridImageAdapter.getCount()>3) {
-//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_out));
-            pageTitle.setText("Already looks great!");
-//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_in));
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        inputImage = cursor.getString(columnIndex);
+                        cursor.close();
+                    } else {
+                        if (imageReturnedIntent.getClipData() != null) {
+                            ClipData mClipData = imageReturnedIntent.getClipData();
+                            ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
+                            for (int i = 0; i < mClipData.getItemCount(); i++) {
+                                ClipData.Item item = mClipData.getItemAt(i);
+                                Uri uri = item.getUri();
+                                mArrayUri.add(uri);
+
+                                Cursor cursor = getActivity().getContentResolver().query(uri, filePathColumn, null, null, null);
+
+                                cursor.moveToFirst();
+
+                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                inputImage = cursor.getString(columnIndex);
+                                inputImages.add(inputImage);
+                                cursor.close();
+                            }
+                            Log.v("LOG_TAG", "Selected Images" + mArrayUri.size());
+                            for(Uri i:mArrayUri)
+                            {
+                                gridImageAdapter.getImageURI(i);
+                            }
+                            renderGridView();
+                        }
+                    }
+                }
         }
     }
 }
+
+//                if(resultCode == RESULT_OK){
+//                    Uri selectedImage = imageReturnedIntent.getData();
+//                    gridImageAdapter.getImageURI(selectedImage);
+//                    renderGridView();
+//                }
