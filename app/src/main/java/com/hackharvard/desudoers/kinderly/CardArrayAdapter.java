@@ -19,12 +19,12 @@ import java.util.List;
 
 public class CardArrayAdapter  extends ArrayAdapter<Card> {
     private static final String TAG = "CardArrayAdapter";
-    private List<Card> cardList = new ArrayList<Card>();
+    static List<Card> cardList = new ArrayList<Card>();
 
     static class CardViewHolder {
         TextView line1;
         TextView line2;
-        ViewPager image;
+        ImageView image;
     }
 
     public CardArrayAdapter(Context context, int textViewResourceId) {
@@ -47,6 +47,8 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
         return this.cardList.get(index);
     }
 
+    static public Card getCard(int index) { return cardList.get(index); }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
@@ -57,18 +59,18 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
             viewHolder = new CardViewHolder();
             viewHolder.line1 = (TextView) row.findViewById(R.id.line1);
             viewHolder.line2 = (TextView) row.findViewById(R.id.line2);
-            viewHolder.image = (ViewPager) row.findViewById(R.id.view_pager);
+            viewHolder.image = (ImageView) row.findViewById(R.id.view_pager);
             row.setTag(viewHolder);
         } else {
             viewHolder = (CardViewHolder)row.getTag();
         }
         Card card = getItem(position);
 
-        viewHolder.line1.setText(card.getLine1());
-        viewHolder.line2.setText(card.getLine2());
-        ImageAdapter adapter = new ImageAdapter(getContext(), card.getImages());
-        viewHolder.image.setAdapter(adapter);
-
+        viewHolder.line1.setText(card.getPrice());
+        viewHolder.line2.setText(card.getAddress());
+//        ImageAdapter adapter = new ImageAdapter(getContext(), card.getImages());
+//        viewHolder.image.setAdapter(adapter);
+        viewHolder.image.setImageBitmap(card.getImages()[0]);
         return row;
     }
 
