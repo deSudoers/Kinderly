@@ -51,6 +51,8 @@
     <string name="heater">Heater</string>
     <string name="propic">Profile Picture</string>
     <string name="coverpic">Profile Cover Image</string>
+    <string name="cam">Camera</string>
+    <string name="gallery">Gallery</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
