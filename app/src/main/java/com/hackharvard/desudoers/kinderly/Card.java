@@ -6,29 +6,44 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.net.URL;
+import java.util.List;
 
 public class Card {
-    private String line1;
-    private String line2;
+    private String price;
+    private String address;
     private Bitmap[] images;
+    private String property_id;
+    private Room[] rooms;
+    private setBitmapImage set;
 
-    public Card(String line1, String line2, String[] urls) {
-        this.line1 = line1;
-        this.line2 = line2;
-        this.images = new Bitmap[urls.length];
-        for(int i = 0; i < urls.length; ++i){
+    public Card(String price, String address, String property_id, List<String> urls, List<Room> rooms) {
+        this.price = price;
+        this.address = address;
+        this.property_id = property_id;
+        this.images = new Bitmap[urls.size()];
+        for(int i = 0; i < urls.size(); ++i){
             this.images[i] = null;
-            new setBitmapImage().execute(urls[i], i+"");
+            set = new setBitmapImage();
+            set.execute(urls.get(i), i+"");
         }
+        this.rooms = new Room[rooms.size()];
+        this.rooms = rooms.toArray(this.rooms);
     }
 
-    public String getLine1() { return line1; }
+    public String getPrice() { return price; }
 
-    public String getLine2() {
-        return line2;
+    public String getAddress() {
+        return address;
     }
 
     public Bitmap[] getImages() { return images; }
+
+    public String getPropertyId() { return property_id;}
+
+    public void stop(){
+        if(set.getStatus().equals(AsyncTask.Status.RUNNING))
+            set.cancel(true);
+    }
 
     class setBitmapImage extends AsyncTask<String, Void, Bitmap> {
         private int index = 0;
@@ -52,4 +67,28 @@ public class Card {
             images[index] = result;
         }
     }
+}
+
+class Room {
+    private String room_id;
+    private int capacity;
+    private boolean attachedbathroom;
+    private boolean ac;
+
+    Room (String room_id, int capacity, boolean attachedbathroom, boolean ac){
+        this.room_id = room_id;
+        this.capacity = capacity;
+        this.attachedbathroom = attachedbathroom;
+        this.ac = ac;
+    }
+
+    public String getRoomId() { return room_id; }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public boolean getAttachedBathroom() { return attachedbathroom; }
+
+    public boolean getAc() { return ac;}
 }

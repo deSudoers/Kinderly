@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,6 +39,8 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -47,6 +50,8 @@ public class HomeFragmentRent extends Fragment {
     private SupportPlaceAutocompleteFragment autocompleteFragment;
 
     private SharedPreferences sp_login, sp_filter;
+
+    private String last_action = "ACTION_MOVE";
 
     @Nullable
     @Override
@@ -143,10 +148,6 @@ public class HomeFragmentRent extends Fragment {
     }
 
     private void updateCards(String homes){
-        String url = "https://www.gettyimages.ie/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg";
-        String url2 = "https://nroer.gov.in/media/e/a/c/c4ce9ba9211d05e48f0bf447a346dde5f0c79a31c163d540ce9c282b43138.jpeg";
-        String urls[] = {url, url2};
-
         Log.e("homes", homes);
 
         JSONObject jsonMsg = null;
@@ -158,12 +159,57 @@ public class HomeFragmentRent extends Fragment {
         }
 
         for (int i = 0; ; i++) {
+
             try {
                 JSONObject msg = jsonMsg.getJSONObject(String.valueOf(i));
                 String price = "Rs " + msg.getInt("price");
                 String address = msg.getString("address");
+                String property_id = msg.getString("property_id");
+
+                JSONObject jsonMsgUrl = null;
+                try {
+                    jsonMsgUrl = new JSONObject(msg.getString("images"));
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                List<String> urls = new ArrayList<>();
+                for(int j = 0; ; j++){
+                    try {
+                        urls.add(jsonMsgUrl.getString(String.valueOf(j)));
+                    }
+                    catch (JSONException e){
+                        e.printStackTrace();
+                        break;
+                    }
+                }
+
+                JSONObject jsonMsgRoom = null;
+                try {
+                    jsonMsgRoom = new JSONObject(msg.getString("rooms"));
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                List<Room> rooms = new ArrayList<>();
+                for(int j = 0; ; j++){
+                    try {
+                        JSONObject jsonMsgRoomDetails = new JSONObject(jsonMsgRoom.getString(String.valueOf(j)));
+                        String room_id = jsonMsgRoomDetails.getString("room_id");
+                        int capacity = jsonMsgRoomDetails.getInt("capacity");
+                        boolean attachedbathroom = jsonMsgRoomDetails.getBoolean("has_attach_bath");
+                        boolean ac = jsonMsgRoomDetails.getBoolean("has_ac");
+                        rooms.add(new Room(room_id, capacity, attachedbathroom, ac));
+                    }
+                    catch (JSONException e){
+                        e.printStackTrace();
+                        break;
+                    }
+                }
                 Card card = null;
-                card = new Card(price, address , urls);
+                card = new Card(price, address, property_id, urls, rooms);
                 cardArrayAdapter.add(card);
             } catch (Exception e) {
                 break;
@@ -175,6 +221,7 @@ public class HomeFragmentRent extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getContext(), CardActivity.class);
+                i.putExtra("id", position);
                 startActivity(i);
             }
         });
@@ -206,7 +253,7 @@ public class HomeFragmentRent extends Fragment {
             String data = "";
             JSONObject postData = new JSONObject();
             try{
-                postData.put("address", mLocation);
+                postData.put("address", "MIT");
                 postData.put("min_price", mMinValue);
                 postData.put("max_price", mMaxValue);
                 postData.put("rooms", mRooms);
