@@ -79,5 +79,6 @@
     <string name="greetings">Greetings!</string>
     <string name="address_text">Let\'s start by adding your home address</string>
     <string name="finish">Finish</string>
+    <string name="title_fav">Favourites</string>
 </resources>
 

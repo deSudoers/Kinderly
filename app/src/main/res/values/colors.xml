@@ -5,4 +5,5 @@
     <color name="colorSecondary">#FFE67C</color>
     <color name="bgcolor">#fff8da</color>
     <color name="colorAccent">#63000c</color>
+    <color name="colorAccentDark">#54000b</color>
 </resources>

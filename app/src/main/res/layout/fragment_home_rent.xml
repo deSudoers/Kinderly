@@ -23,6 +23,16 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                app:srcCompat="@drawable/title" />
+
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -73,9 +83,9 @@
                             android:layout_marginTop="-7dip"
                             android:layout_marginRight="-5dip"
                             android:layout_marginBottom="-7dip"
-                            android:background="@color/common_google_signin_btn_text_dark_default"
+                            android:background="@color/colorAccentDark"
                             android:text="@string/action_filter"
-                            android:textColor="@color/colorAccent"
+                            android:textColor="@color/colorSecondary"
                             android:textStyle="bold" />
 
                         <Button
@@ -87,9 +97,9 @@
                             android:layout_marginTop="-7dip"
                             android:layout_marginRight="-5dip"
                             android:layout_marginBottom="-7dip"
-                            android:background="@color/common_google_signin_btn_text_dark_default"
                             android:text="@string/action_sort"
-                            android:textColor="@color/colorAccent"
+                            android:background="@color/colorAccent"
+                            android:textColor="@color/colorSecondary"
                             android:textStyle="bold" />
                     </TableRow>
 
