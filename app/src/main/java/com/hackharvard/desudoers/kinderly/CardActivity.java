@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -72,8 +73,8 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -87,6 +88,9 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
         for(Bitmap bitmap: card.getImages()){
             ImageView imageView = new ImageView(this);
             imageView.setImageBitmap(bitmap);
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(1200, LinearLayout.LayoutParams.MATCH_PARENT));
             linearLayout.addView(imageView);
         }
 
@@ -122,7 +126,7 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         address_view = (TextView) findViewById(R.id.address_card);
         price_view = (TextView) findViewById(R.id.price_card);
@@ -189,6 +193,13 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         ((CoordinatorLayout)progressBar.getParent()).removeView(progressBar);
         fab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Intent i = new Intent(this, RentActivity.class);
+        startActivity(i);
     }
 
     @Override

@@ -154,6 +154,7 @@ public class HomeFragmentRent extends Fragment {
         try {
             jsonMsg = new JSONObject(homes);
             cardArrayAdapter.clear();
+            CardArrayAdapter.cardList.clear();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -220,6 +221,7 @@ public class HomeFragmentRent extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getActivity().finish();
                 Intent i = new Intent(getContext(), CardActivity.class);
                 i.putExtra("id", position);
                 startActivity(i);
