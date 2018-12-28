@@ -342,7 +342,7 @@ public class FilterActivity extends AppCompatActivity {
             flag = true;
             text_range.setText(minValue+"k - "+ maxValue +"k");
             width += 385;
-            if(width > size.x - 200) {
+            if(width > size.x - 300) {
                 width = 385;
                 linearLayout2.addView(view_range);
                 row = 1;
@@ -355,7 +355,7 @@ public class FilterActivity extends AppCompatActivity {
             flag = true;
             text_rooms.setText("Rooms: " + rooms);
             width += 320;
-            if(width > size.x - 200){
+            if(width > size.x - 300){
                 width = 320;
                 if(row == 0){
                     row = 1;
@@ -378,7 +378,7 @@ public class FilterActivity extends AppCompatActivity {
             flag = true;
             text_capacity.setText("Capacity: " + capacity);
             width += 350;
-            if(width > size.x - 200){
+            if(width > size.x - 300){
                 width = 350;
                 if(row == 0){
                     row = 1;
@@ -404,7 +404,7 @@ public class FilterActivity extends AppCompatActivity {
             flag = true;
             text_attachedbathroom.setText(attachedbathroom == 1 ? "Attached Bathroom" : "No Bathroom");
             width += textToWidth(text_attachedbathroom.getText().toString());
-            if(width > size.x - 200){
+            if(width > size.x - 300){
                 width = textToWidth(text_attachedbathroom.getText().toString());
                 if(row == 0){
                     row = 1;
@@ -428,7 +428,7 @@ public class FilterActivity extends AppCompatActivity {
 
         if(flag){
             width += 230;
-            if(width > size.x - 200){
+            if(width > size.x - 300){
                 if(row == 0){
                     linearLayout2.addView(view_clear);
                 }

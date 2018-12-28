@@ -9,13 +9,18 @@
 
     <Button
         android:id="@+id/filter_button"
-        android:layout_width="346dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button"
+        android:gravity="center_vertical"
         android:text="@string/apply"
+        android:textAlignment="center"
+        android:textColor="@color/colorSecondary"
+        android:textSize="20sp"
+        android:letterSpacing="0.2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.521"
@@ -26,7 +31,9 @@
         android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
         android:layout_width="0dp"
         android:layout_height="53dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,36 +43,33 @@
         android:id="@+id/rent_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="36dp"
         android:text="@string/rent"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete_fragment" />
 
     <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
         android:id="@+id/rangeSeekbar"
-        android:layout_width="263dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="76dp"
-        android:layout_marginEnd="10dp"
+        android:layout_width="247dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rent_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
-        app:layout_constraintStart_toEndOf="@+id/rent_view"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/rent_view" />
 
     <TextView
         android:id="@+id/seekbarmin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="110dp"
+        android:layout_marginStart="24dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/rangeSeekbar"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/rangeSeekbar"
         app:layout_constraintTop_toTopOf="@+id/rangeSeekbar"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.023" />
 
     <TextView
         android:id="@+id/seekbarmax"
@@ -86,85 +90,86 @@
     <SeekBar
         android:id="@+id/roomSeekbar"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="257dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="10dp"
+        android:layout_width="228dp"
+        android:layout_height="22dp"
+        android:layout_marginEnd="30dp"
         android:max="4"
         android:progress="0"
+        app:layout_constraintBottom_toBottomOf="@+id/rooms_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rangeSeekbar" />
+        app:layout_constraintTop_toTopOf="@+id/rooms_view" />
 
     <TextView
         android:id="@+id/rooms_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="36dp"
         android:text="@string/rooms"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rent_view" />
 
     <TextView
         android:id="@+id/capacity_view"
-        android:layout_width="113dp"
+        android:layout_width="wrap_content"
         android:layout_height="33dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="228dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="36dp"
         android:text="@string/capacity"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/rooms_view" />
 
     <SeekBar
         android:id="@+id/capacitySeekbar"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="238dp"
-        android:layout_height="29dp"
-        android:layout_marginTop="232dp"
-        android:layout_marginEnd="10dp"
+        android:layout_width="211dp"
+        android:layout_height="19dp"
+        android:layout_marginEnd="30dp"
         android:max="2"
         android:progress="0"
+        app:layout_constraintBottom_toBottomOf="@+id/capacity_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/capacity_view" />
 
     <Switch
         android:id="@+id/attachedBathroom"
-        android:layout_width="337dp"
+        android:layout_width="match_parent"
         android:layout_height="37dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="296dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="30dp"
         android:text="@string/attached_bath"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.518"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/capacity_view" />
 
     <LinearLayout
         android:id="@+id/linearlayout"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="284dp"
-        android:layout_marginEnd="10dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="8dp"
         android:gravity="start"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearlayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete_fragment" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearlayout2"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="30dp"
         android:gravity="start"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -175,14 +180,17 @@
     <LinearLayout
         android:id="@+id/linearlayout3"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="8dp"
         android:gravity="start"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/filter_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearlayout" />
+        app:layout_constraintTop_toBottomOf="@+id/attachedBathroom" />
 
 </android.support.constraint.ConstraintLayout>
