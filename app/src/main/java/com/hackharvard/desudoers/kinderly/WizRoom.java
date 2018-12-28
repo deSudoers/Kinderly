@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class WizRoom extends Fragment{
 
     TextView pageTitle;
@@ -45,7 +48,7 @@ public class WizRoom extends Fragment{
         return view;
     }
 
-    public void getData()
+    public void getData(int roomId)
     {
         SharedPreferences sp;
         sp = getActivity().getSharedPreferences("letProperty", Context.MODE_PRIVATE);
@@ -53,15 +56,39 @@ public class WizRoom extends Fragment{
         boolean ab = checkOption(yes,no);
         boolean ac = checkOption(ac_yes,ac_no);
         boolean h = checkOption(h_yes,h_no);
-        String roomInfo = sp.getString("roomInfo",null);
-        /*
-        if(roomInfo==null)
-            roomInfo = cap + ", ab: " + ab + ", ac: " + ac + ", heater: " + h + "\n";
+
+        JSONObject roomInfo = new JSONObject();
+        try {
+            roomInfo.put("room_id",roomId);
+            roomInfo.put("capacity",cap);
+            roomInfo.put("has_attach_bath",ab);
+            roomInfo.put("has_ac",ac);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String strRooms = sp.getString("propRooms",null);
+        JSONObject rooms = null;
+        if(strRooms==null)
+        {
+            try {
+                rooms = new JSONObject();
+                rooms.put(roomId-1+"",roomInfo);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         else
-            roomInfo += cap + ", ab: " + ab + ", ac: " + ac + ", heater: " + h + "\n";
-        */
-        roomInfo = "{\"property_id\":12345,\"capacity\":"+cap+",\"has_attach_bath\":"+ab+",\"has_ac\":"+ac+",\"has_heater\":"+h+"}";
-        sp.edit().putString("roomInfo", roomInfo).apply();
+        {
+            try{
+                rooms = new JSONObject(strRooms);
+                rooms.put(roomId-1+"",roomInfo);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        sp.edit().putString("propRooms", rooms.toString()).apply();
     }
 
     private boolean checkOption(RadioButton yes,RadioButton no) {

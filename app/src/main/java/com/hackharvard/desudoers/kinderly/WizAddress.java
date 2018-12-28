@@ -56,17 +56,8 @@ public class WizAddress extends Fragment{
         address += "," + street.getText().toString();
         address += "," + city.getText().toString();
         address += "," + state.getText().toString();
-        JSONObject addr = new JSONObject();
-        try{
-            addr.put("address",address);
-            addr.put("price",999);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
 
-        sp.edit().putString("property",addr.toString()).apply();
+        sp.edit().putString("propAddress",address).apply();
         if(apt.isChecked())
             sp.edit().putString("type","Apartment").apply();
         else if(bung.isChecked())

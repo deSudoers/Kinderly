@@ -58,6 +58,8 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
 
         sp = getSharedPreferences("letProperty",MODE_PRIVATE);
         sp.edit().putInt("numOfRooms",numOfRooms).apply();
+        sp.edit().putString("propRooms",null).apply();
+        sp.edit().putString("propImages",null).apply();
 
         pageTitle = findViewById(R.id.pageTitle);
         pageTitle.setText(R.string.greetings);
@@ -110,14 +112,11 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                     sp.edit().putString("roomInfo",null).apply();
                     break;
             case 4: try{
-                        wr.get(pageNumber-4).getData();
+                        wr.get(pageNumber-4).getData(pageNumber-3);
                     }
                     catch(Exception e) {
                         Log.e("XYZ",e.toString());
                     }
-                    break;
-            case 5: String property = sp.getString("property",null);
-                    new uploadPropertyData(getString(R.string.url)+"property",property).execute((Void)null);
                     break;
         }
     }
@@ -144,7 +143,25 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                     else
                         pageNumber--;
                     break;
-            case 6: super.finish();
+            case 6: JSONObject property = null;
+                    try {
+                        String addr = sp.getString("propAddress", null);
+                        JSONObject rooms = new JSONObject(sp.getString("propRooms", null));
+                        property = new JSONObject();
+                        property.put("address",addr);
+                        property.put("price",20000);
+                        property.put("rooms",rooms);
+                    }
+                    catch (JSONException e)
+                    {
+                        e.printStackTrace();
+                        Log.e("ABCJ",e.toString());
+                    }
+                    finally {
+                        new uploadPropertyData(getString(R.string.url)+"property",property.toString()).execute((Void)null);
+//                        sp.edit().putString("propertyid",property.toString()).apply();
+                    }
+                    super.finish();
                     break;
         }
     }
@@ -241,7 +258,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                 pd.dismiss();
             }
             if(!data.equals("")){
-                SharedPreferences sp = getSharedPreferences("property",MODE_PRIVATE);
+                SharedPreferences sp = getSharedPreferences("letProperty",MODE_PRIVATE);
                 Log.e("ABC",data);
                 sp.edit().putString("propertyid",data).apply();
             }
