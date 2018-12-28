@@ -115,10 +115,13 @@
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/image_grid"
         android:layout_width="match_parent"
-        android:layout_height="331dp"
+        android:layout_height="400dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="25dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="8dp"
-        android:columnWidth="90dp"
+        android:columnWidth="130dp"
+        android:elevation="5dp"
         android:gravity="center"
         android:horizontalSpacing="10dp"
         android:numColumns="auto_fit"
@@ -128,7 +131,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gallery" />
+        app:layout_constraintTop_toBottomOf="@+id/camera" />
 
 
 </android.support.constraint.ConstraintLayout>

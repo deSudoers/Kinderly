@@ -59,6 +59,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         sp = getSharedPreferences("letProperty",MODE_PRIVATE);
         sp.edit().putInt("numOfRooms",numOfRooms).apply();
         sp.edit().putString("propRooms",null).apply();
+        sp.edit().putString("propImages",null).apply();
 
         pageTitle = findViewById(R.id.pageTitle);
         pageTitle.setText(R.string.greetings);

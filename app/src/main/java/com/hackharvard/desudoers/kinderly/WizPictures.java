@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -56,6 +61,7 @@ public class WizPictures extends Fragment implements View.OnClickListener{
         gallery.setOnClickListener(this);
         camera.setOnClickListener(this);
         pageTitle = view.findViewById(R.id.pageTitle);
+        viewAddedPictures();
 
 //        imageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            public void onItemClick(AdapterView<?> parent, View v,
@@ -66,6 +72,27 @@ public class WizPictures extends Fragment implements View.OnClickListener{
 //        });
 
         return view;
+    }
+
+    public void viewAddedPictures() {
+        SharedPreferences sp = getActivity().getSharedPreferences("letProperty",Context.MODE_PRIVATE);
+        String strImages = sp.getString("propImages",null);
+        Log.e("LOG_IMG","here");
+        if(strImages!=null)
+        {
+            try{
+                JSONArray images = new JSONArray(strImages);
+                for(int i=0;i<images.length();i++)
+                {
+                    Uri imageUri = Uri.parse(images.get(i).toString());
+                    Log.e("LOG_IMG",i+"");
+                    gridImageAdapter.getImageURI(imageUri);
+                }
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -144,6 +171,7 @@ public class WizPictures extends Fragment implements View.OnClickListener{
                         String imgPath = destination.getAbsolutePath();
                         Uri selectedImage = Uri.parse(imgPath);
                         gridImageAdapter.getImageURI(selectedImage);
+                        addImageUri(selectedImage);
                         renderGridView();
 
                     } catch (Exception e) {
@@ -165,6 +193,8 @@ public class WizPictures extends Fragment implements View.OnClickListener{
                         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                         inputImage = cursor.getString(columnIndex);
                         cursor.close();
+                        gridImageAdapter.getImageURI(mImageUri);
+                        addImageUri(mImageUri);
                     } else {
                         if (imageReturnedIntent.getClipData() != null) {
                             ClipData mClipData = imageReturnedIntent.getClipData();
@@ -184,14 +214,41 @@ public class WizPictures extends Fragment implements View.OnClickListener{
                                 cursor.close();
                             }
                             Log.v("LOG_TAG", "Selected Images" + mArrayUri.size());
-                            for(Uri i:mArrayUri)
-                            {
+                            for(Uri i:mArrayUri) {
                                 gridImageAdapter.getImageURI(i);
+                                addImageUri(i);
                             }
-                            renderGridView();
                         }
                     }
+                    renderGridView();
                 }
+        }
+    }
+
+
+    private void addImageUri(Uri imageUri)
+    {
+        SharedPreferences sp = getActivity().getSharedPreferences("letProperty",Context.MODE_PRIVATE);
+        String strImages = sp.getString("propImages",null);
+        try {
+
+            if(strImages == null)
+            {
+                JSONArray images = new JSONArray();
+                images.put(imageUri);
+                Log.e("LOG_IMG",images.toString());
+                sp.edit().putString("propImages",images.toString()).apply();
+            }
+            else
+            {
+                JSONArray images = new JSONArray(strImages);
+                images.put(imageUri);
+                Log.e("LOG_IMG",images.toString());
+                sp.edit().putString("propImages",images.toString()).apply();
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }

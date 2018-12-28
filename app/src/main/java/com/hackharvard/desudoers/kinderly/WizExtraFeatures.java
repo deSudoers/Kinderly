@@ -33,7 +33,9 @@ public class WizExtraFeatures extends Fragment {
 //        s = s + ", " + sp.getString("type","default");
 //        s = s + ", " + sp.getInt("numOfRooms",0);
 //        s = sp.getString("roomInfo","default");
-        pageTitle.setText(sp.getString("propAddress","default")+sp.getString("propRooms","default"));
+        pageTitle.setText(sp.getString("propAddress","default")
+                +sp.getString("propRooms","default")
+                +sp.getString("propImages","default"));
 
 //        try {
 //            JSONObject jsonObject = new JSONObject(s);
