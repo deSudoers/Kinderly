@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" >
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
             </android.support.v7.widget.Toolbar>
 
@@ -40,7 +40,9 @@
                     android:id="@+id/linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"></LinearLayout>
+                    android:orientation="horizontal">
+
+                </LinearLayout>
             </HorizontalScrollView>
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -53,8 +55,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        android:backgroundTint="#295F2D"
+        app:backgroundTint="#295F2D"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/call_white"
+        android:visibility="invisible"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:paddingLeft="150dp"
+        android:paddingTop="100dp"
+        android:paddingRight="150dp"
+        android:paddingBottom="100dp" />
 
 </android.support.design.widget.CoordinatorLayout>

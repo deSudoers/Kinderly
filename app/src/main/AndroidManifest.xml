@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -12,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -42,7 +44,7 @@
             android:label="@string/title_activity_let" />
         <activity
             android:name=".CardActivity"
-            android:label="@string/title_activity_card"
+            android:label=""
             android:parentActivityName=".RentActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

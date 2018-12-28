@@ -1,15 +1,19 @@
 package com.hackharvard.desudoers.kinderly;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,8 +21,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -27,12 +41,27 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class CardActivity extends AppCompatActivity {
+public class CardActivity extends AppCompatActivity implements OnMapReadyCallback {
     private int index;
     private Card card;
     private LinearLayout linearLayout;
-    private TextView address;
-    private TextView price;
+    private TextView address_view;
+    private TextView price_view;
+    private LinearLayout linearLayoutRoom;
+
+    private ProgressBar progressBar;
+    private FloatingActionButton fab;
+
+    private SupportMapFragment mapFragment;
+    private String address;
+    private double latitude, longitude;
+
+    private TextView contact_name_view;
+    private TextView contact_number_view;
+    private String contact_name;
+    private long contact_number;
+    private ImageView contact_call;
+    private ImageView contact_msg;
 
     private String property_id;
 
@@ -42,8 +71,11 @@ public class CardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         Bundle bundle = getIntent().getExtras();
         index = bundle.getInt("id");
@@ -60,42 +92,123 @@ public class CardActivity extends AppCompatActivity {
 
         sp_login = getSharedPreferences("login", MODE_PRIVATE);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+contact_number));
+                startActivity(intent);
             }
         });
+
+        contact_call = (ImageView) findViewById(R.id.contact_call);
+        contact_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+contact_number));
+                startActivity(intent);
+            }
+        });
+
+        contact_msg = (ImageView) findViewById(R.id.contact_msg);
+        contact_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("sms:"+contact_number));
+                startActivity(intent);
+            }
+        });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        address = (TextView) findViewById(R.id.address_card);
-        price = (TextView) findViewById(R.id.price_card);
+        address_view = (TextView) findViewById(R.id.address_card);
+        price_view = (TextView) findViewById(R.id.price_card);
+
+        linearLayoutRoom = (LinearLayout) findViewById(R.id.rooms_layout);
+
+        contact_name_view = (TextView) findViewById(R.id.contact_name);
+        contact_number_view = (TextView) findViewById(R.id.contact_number);
 
         property_id = card.getPropertyId();
 
-        try{
-            for(int i = 0; ; ++i){
+        for(int i = 0; i < CardArrayAdapter.cardList.size(); ++i) {
+            try {
                 CardArrayAdapter.cardList.get(i).stop();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }
-        catch (Exception e){
-            e.printStackTrace();
         }
 
         new QueryTask(getString(R.string.url)+"property/"+property_id).execute();
     }
 
     public void update(String change){
+        Log.e("cardact", change);
         try{
             JSONObject json = new JSONObject(change);
-            address.setText(json.getString("address"));
-            price.setText("Rs. "+json.getInt("price"));
+            address = json.getString("address");
+            address_view.setText(address);
+            price_view.setText("Rs. "+json.getInt("price"));
+            JSONObject jsonRooms = new JSONObject(json.getString("rooms"));;
+            try{
+                for(int i = 0;;i++){
+                    JSONObject jsonRoom = new JSONObject(jsonRooms.getString(String.valueOf(i)));
+                    int capacity = jsonRoom.getInt("capacity");
+                    boolean attachedbathroom = jsonRoom.getBoolean("has_attach_bath");
+                    boolean ac = jsonRoom.getBoolean("has_ac");
+                    View view = getLayoutInflater().inflate(R.layout.list_item_room, null);
+                    TextView tv = (TextView) view.findViewById(R.id.line1);
+                    tv.setText("Capacity: "+capacity);
+                    ImageView iv2 = (ImageView) view.findViewById(R.id.line2_image);
+                    iv2.setImageDrawable(getDrawable(attachedbathroom ? R.drawable.tick : R.drawable.cross));
+                    ImageView iv3 = (ImageView) view.findViewById(R.id.line3_image);
+                    iv3.setImageDrawable(getDrawable(ac ? R.drawable.tick : R.drawable.cross));
+                    linearLayoutRoom.addView(view);
+                }
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+            }
+            latitude = 0.0;
+            longitude = 0.0;
+            mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.mymap);
+            mapFragment.getMapAsync(this);
+
+            JSONObject jsonContact = new JSONObject(json.getString("user"));
+            contact_name = jsonContact.getString("first_name")+" "+jsonContact.getString("last_name");
+            contact_number = jsonContact.getLong("mobile");
+            contact_name_view.setText(contact_name);
+            contact_number_view.setText(contact_number+"");
         }
         catch (Exception e){
 
         }
+        ((CoordinatorLayout)progressBar.getParent()).removeView(progressBar);
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        GoogleMap mMap = googleMap;
+        Marker locationMarker;
+
+        LatLng myLocation = new LatLng(latitude, longitude);
+        locationMarker = mMap.addMarker(new MarkerOptions().position(myLocation));
+        if(myLocation.longitude == 0 && myLocation.latitude == 0)
+        {
+            locationMarker.setTitle("Location Unknown");
+        }
+        else {
+            locationMarker.setTitle(address);
+        }
+
+        locationMarker.showInfoWindow();
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 10));
     }
 
     public class QueryTask extends AsyncTask<Void, Void, String> {

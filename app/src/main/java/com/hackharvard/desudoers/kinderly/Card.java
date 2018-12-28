@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
@@ -41,19 +43,27 @@ public class Card {
     public String getPropertyId() { return property_id;}
 
     public void stop(){
-        if(set.getStatus().equals(AsyncTask.Status.RUNNING))
-            set.cancel(true);
+        set.cancel(true);
     }
 
-    class setBitmapImage extends AsyncTask<String, Void, Bitmap> {
+    class setBitmapImage extends AsyncTask<String, Void, Bitmap>  {
         private int index = 0;
+        HttpURLConnection httpURLConnection = null;
+        URL url = null;
+        InputStream inputStream;
+
         @Override
         protected Bitmap doInBackground(String... params) {
-            index = Integer.parseInt(params[1]);
             Bitmap bitmap = null;
+            if(set.isCancelled()) {
+                return bitmap;
+            }
+            index = Integer.parseInt(params[1]);
             try {
-                URL url = new URL(params[0]);
-                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                url = new URL(params[0]);
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                inputStream = httpURLConnection.getInputStream();
+                bitmap = BitmapFactory.decodeStream(inputStream);
             }
             catch (Exception e){
                 e.printStackTrace();
