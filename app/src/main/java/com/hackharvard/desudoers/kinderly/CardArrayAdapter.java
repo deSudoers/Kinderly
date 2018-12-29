@@ -74,7 +74,7 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
         }
         final Card card = getItem(position);
 
-        viewHolder.line1.setText(card.getPrice());
+        viewHolder.line1.setText("₹ "+card.getPrice());
         viewHolder.line2.setText(card.getAddress());
 //        ImageAdapter adapter = new ImageAdapter(getContext(), card.getImages());
 //        viewHolder.image.setAdapter(adapter);
