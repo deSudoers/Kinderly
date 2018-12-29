@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<resources>  
+  <array name="Sortby">  
+    <item>Rent - Low to High</item>  
+    <item>Rent - High to Low</item>  
+    <item>Favourites First</item>
+  </array>
+</resources> 

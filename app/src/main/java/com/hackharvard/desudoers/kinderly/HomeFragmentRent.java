@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -36,11 +37,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class HomeFragmentRent extends Fragment {
+public class HomeFragmentRent extends Fragment implements SortDialogFragment.SortDialogListener{
     private CardArrayAdapter cardArrayAdapter;
     private ListView listView;
     private SupportPlaceAutocompleteFragment autocompleteFragment;
@@ -108,6 +111,16 @@ public class HomeFragmentRent extends Fragment {
         listView = (ListView) getView().findViewById(R.id.cardList);
         listView.setNestedScrollingEnabled(true);
         listView.setDivider(null);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getActivity().finish();
+                Intent i = new Intent(getContext(), CardActivity.class);
+                i.putExtra("id", position);
+                startActivity(i);
+            }
+        });
+
         cardArrayAdapter = new CardArrayAdapter(getContext(), R.layout.list_item_card);
 
         Button mFilterButton = (Button) getView().findViewById(R.id.filter);
@@ -122,11 +135,86 @@ public class HomeFragmentRent extends Fragment {
         mSortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showNoticeDialog();
             }
         });
 
         queryHomes();
+    }
+
+    private void showNoticeDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new SortDialogFragment();
+        dialog.setTargetFragment(this, 0);
+        dialog.show(getFragmentManager(), "SortDialogFragment");
+    }
+
+    // The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the NoticeDialogFragment.NoticeDialogListener interface
+    @Override
+    public void onDialogPositiveClick(int id) {
+        // User touched the dialog's positive button
+        switch (id){
+            case 0: ascending();
+                    break;
+            case 1: descending();
+                    break;
+            case 2: favourite();
+                    break;
+        }
+    }
+
+    private void ascending(){
+        int size = cardArrayAdapter.getCount();
+        Card cards[] = new Card[size];
+        CardArrayAdapter.cardList.toArray(cards);
+        for(int i = 0; i < size; ++i){
+            for(int j=0; j < size - i - 1; ++j){
+                if(Double.parseDouble(cards[j].getPrice()) > Double.parseDouble(cards[j+1].getPrice())){
+                    Card temp = cards[j];
+                    cards[j] = cards[j+1];
+                    cards[j+1] = temp;
+                }
+            }
+        }
+        CardArrayAdapter.cardList = Arrays.asList(cards);
+        cardArrayAdapter.notifyDataSetChanged();
+        listView.setAdapter(cardArrayAdapter);
+    }
+
+    private void descending(){
+        int size = cardArrayAdapter.getCount();
+        Card cards[] = new Card[size];
+        CardArrayAdapter.cardList.toArray(cards);
+        for(int i = 0; i < size; ++i){
+            for(int j=0; j < size - i - 1; ++j){
+                if(Double.parseDouble(cards[j].getPrice()) < Double.parseDouble(cards[j+1].getPrice())){
+                    Card temp = cards[j];
+                    cards[j] = cards[j+1];
+                    cards[j+1] = temp;
+                }
+            }
+        }
+        CardArrayAdapter.cardList = Arrays.asList(cards);
+        cardArrayAdapter.notifyDataSetChanged();
+        listView.setAdapter(cardArrayAdapter);
+    }
+
+    private void favourite(){
+        int size = cardArrayAdapter.getCount();
+        Card cards[] = new Card[size];
+        int start = 0, end = size;
+        for(int j = 0; j < size; ++j){
+            Card card = cardArrayAdapter.getItem(j);
+            if(card.isFavourite())
+                cards[start++] = card;
+            else
+                cards[--end] = card;
+        }
+        CardArrayAdapter.cardList = Arrays.asList(cards);
+        cardArrayAdapter.notifyDataSetChanged();
+        listView.setAdapter(cardArrayAdapter);
     }
 
     private void goToFilterActivity(){
@@ -179,7 +267,7 @@ public class HomeFragmentRent extends Fragment {
 
             try {
                 JSONObject msg = jsonMsg.getJSONObject(String.valueOf(i));
-                String price = "₹ " + msg.getInt("price");
+                String price = msg.getInt("price")+"";
                 String address = msg.getString("address");
                 String property_id = msg.getString("property_id");
 
@@ -212,16 +300,6 @@ public class HomeFragmentRent extends Fragment {
             }
         }
         listView.setAdapter(cardArrayAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getActivity().finish();
-                Intent i = new Intent(getContext(), CardActivity.class);
-                i.putExtra("id", position);
-                startActivity(i);
-            }
-        });
 
         boolean flag = false;
         linearLayout.removeAllViews();
