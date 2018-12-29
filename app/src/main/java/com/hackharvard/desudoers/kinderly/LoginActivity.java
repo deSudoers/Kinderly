@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity{
         sp_login = getSharedPreferences("login", MODE_PRIVATE);
 
         if(sp_login.getBoolean("logged", false)) {
-//            goToRentActivity();
+            goToRentActivity();
 //            goToLetActivity();
         }
 
