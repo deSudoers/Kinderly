@@ -202,9 +202,10 @@ public class HomeFragmentRent extends Fragment {
                         break;
                     }
                 }
-
+//                boolean favourite = msg.getBoolean("favourite");
+                boolean favourite = true;
                 Card card = null;
-                card = new Card(price, address, property_id, urls);
+                card = new Card(price, address, property_id, urls, favourite);
                 cardArrayAdapter.add(card);
             } catch (Exception e) {
                 break;

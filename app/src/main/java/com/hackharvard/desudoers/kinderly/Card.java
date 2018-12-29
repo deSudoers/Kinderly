@@ -15,8 +15,9 @@ public class Card {
     private Bitmap[] images;
     private String property_id;
     private setBitmapImage set;
+    private boolean favourite;
 
-    public Card(String price, String address, String property_id, List<String> urls) {
+    public Card(String price, String address, String property_id, List<String> urls, boolean favourite) {
         this.price = price;
         this.address = address;
         this.property_id = property_id;
@@ -26,6 +27,7 @@ public class Card {
             set = new setBitmapImage();
             set.execute(urls.get(i), i+"");
         }
+        this.favourite = favourite;
     }
 
     public String getPrice() { return price; }
@@ -37,6 +39,12 @@ public class Card {
     public Bitmap[] getImages() { return images; }
 
     public String getPropertyId() { return property_id;}
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean fav) { favourite = fav; }
 
     public void stop(){
         set.cancel(true);

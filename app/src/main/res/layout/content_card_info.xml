@@ -234,5 +234,15 @@
 
     </android.support.v7.widget.CardView>
 
+    <ImageView
+        android:id="@+id/rating"
+        android:layout_width="51dp"
+        android:layout_height="53dp"
+        app:layout_constraintBottom_toBottomOf="@+id/price_card"
+        app:layout_constraintEnd_toEndOf="@+id/address_card"
+        app:layout_constraintTop_toTopOf="@+id/address_card"
+        app:layout_constraintVertical_bias="1.0"
+        card_view:srcCompat="@drawable/star_grey" />
+
     <!--</android.support.constraint.ConstraintLayout>-->
 </android.support.constraint.ConstraintLayout>

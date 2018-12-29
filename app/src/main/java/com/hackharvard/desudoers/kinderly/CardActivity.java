@@ -1,5 +1,6 @@
 package com.hackharvard.desudoers.kinderly;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -33,6 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class CardActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private Context cxt;
     private int index;
     private Card card;
     private LinearLayout linearLayout;
@@ -42,6 +44,7 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private ProgressBar progressBar;
     private FloatingActionButton fab;
+    private ImageView rating;
 
     private SupportMapFragment mapFragment;
     private String address;
@@ -62,6 +65,8 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
+
+        cxt = this;
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
@@ -93,6 +98,25 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:"+contact_number));
                 startActivity(intent);
+            }
+        });
+
+        rating = (ImageView) findViewById(R.id.rating);
+        rating.setImageDrawable(getDrawable(card.isFavourite() ? R.drawable.star_brown : R.drawable.star_grey));
+        rating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean set = card.isFavourite();
+                SetFavourite setFavourite = new SetFavourite(!set, card.getPropertyId(), getString(R.string.url)+"favourite", cxt);
+                try {
+                    if (setFavourite.execute().get()) {
+                        card.setFavourite(!set);
+                        rating.setImageDrawable(getDrawable(set ? R.drawable.star_grey : R.drawable.star_brown));
+                    }
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -145,7 +169,7 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
             JSONObject json = new JSONObject(change);
             address = json.getString("address");
             address_view.setText(address);
-            price_view.setText("Rs. "+json.getInt("price"));
+            price_view.setText("₹  "+json.getInt("price"));
             JSONObject jsonRooms = new JSONObject(json.getString("rooms"));;
             try{
                 for(int i = 0;;i++){
@@ -160,6 +184,8 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
                     iv2.setImageDrawable(getDrawable(attachedbathroom ? R.drawable.tick : R.drawable.cross));
                     ImageView iv3 = (ImageView) view.findViewById(R.id.line3_image);
                     iv3.setImageDrawable(getDrawable(ac ? R.drawable.tick : R.drawable.cross));
+                    TextView tv2 = (TextView) view.findViewById(R.id.room_id);
+                    tv2.setText("#Room " + (i+1));
                     linearLayoutRoom.addView(view);
                 }
             }

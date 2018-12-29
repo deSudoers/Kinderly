@@ -26,6 +26,8 @@ public class RentActivity extends AppCompatActivity {
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_fav:
+                    fragment = new FavouriteFragment();
+                    loadFragment(fragment);
                     return true;
                 case R.id.navigation_profile:
                     fragment = new ProfileFragment();

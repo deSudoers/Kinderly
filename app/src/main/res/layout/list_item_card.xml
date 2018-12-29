@@ -46,6 +46,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="8dp"
                     android:lineSpacingExtra="14sp"
+                    android:paddingEnd="50dp"
                     android:text="₹ 20,500"
                     android:textColor="@color/colorAccent"
                     android:textSize="28sp"
@@ -59,13 +60,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="2dp"
-                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="8dp"
+                    android:paddingEnd="50dp"
                     android:text="MIT"
                     android:textColor="#545454"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/price_line" />
 
@@ -80,6 +80,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+                <ImageView
+                    android:id="@+id/rating"
+                    android:layout_width="38dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/address_line"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/price_line"
+                    app:layout_constraintVertical_bias="0.875"
+                    card_view:srcCompat="@drawable/star_grey" />
 
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
