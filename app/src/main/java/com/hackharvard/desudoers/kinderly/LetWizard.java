@@ -60,6 +60,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         sp.edit().putInt("numOfRooms",numOfRooms).apply();
         sp.edit().putString("propRooms",null).apply();
         sp.edit().putString("propImages",null).apply();
+        sp.edit().putString("propId",null).apply();
 
         pageTitle = findViewById(R.id.pageTitle);
         pageTitle.setText(R.string.greetings);
@@ -144,24 +145,48 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                         pageNumber--;
                     break;
             case 6: JSONObject property = null;
+                    String data = null;
+                    String propId = null;
                     try {
                         String addr = sp.getString("propAddress", null);
-                        JSONObject rooms = new JSONObject(sp.getString("propRooms", null));
                         property = new JSONObject();
                         property.put("address",addr);
                         property.put("price",20000);
-                        property.put("rooms",rooms);
+                        property.put("type",sp.getString("propType",null));
+                        data = property.toString();
+                        property.put("street",sp.getString("propType",null));
+                        property.put("city",sp.getString("propType",null));
+                        property.put("state",sp.getString("propType",null));
+                        Log.e("ABCJ","sending data");
+                        propId = new uploadPropertyData(getString(R.string.url)+"property",data,-1).execute((Void)null).get();
                     }
                     catch (JSONException e)
                     {
                         e.printStackTrace();
                         Log.e("ABCJ",e.toString());
                     }
-                    finally {
-                        new uploadPropertyData(getString(R.string.url)+"property",property.toString()).execute((Void)null);
-//                        sp.edit().putString("propertyid",property.toString()).apply();
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
                     }
-                    super.finish();
+
+                    JSONObject roomsData = null;
+                    JSONObject room = null;
+                    try {
+                        int id = Integer.parseInt(new JSONObject(propId).getString("property_id"));
+                        Log.e("ABC",id+"");
+                        String roomStr = sp.getString("propRooms", null);
+                        roomsData = new JSONObject(roomStr);
+                        for (int i = 0; i < numOfRooms; i++)
+                        {
+                            room = roomsData.getJSONObject(i+"");
+                            room.put("property_id",id);
+                            new uploadPropertyData(getString(R.string.url)+"room",room.toString(),i).execute((Void)null);
+                        }
+                    }
+                    catch (JSONException e){
+                        e.printStackTrace();
+                    }
                     break;
         }
     }
@@ -188,9 +213,11 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         private JSONObject jsonData;
         private String url;
         ProgressDialog pd;
-        uploadPropertyData(String url,String data) {
+        int type;
+        uploadPropertyData(String url,String data,int i) {
             try{
                 this.url = url;
+                this.type = i;
                 jsonData = new JSONObject(data);
             }
             catch(JSONException e)
@@ -203,7 +230,10 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
             super.onPreExecute();
 
             pd = new ProgressDialog(LetWizard.this);
-            pd.setMessage("Adding Property");
+            if(type==-1)
+                pd.setMessage("Adding Property");
+            else
+                pd.setMessage("Adding Room "+type);
             pd.setCancelable(false);
             pd.show();
         }
@@ -258,15 +288,12 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                 pd.dismiss();
             }
             if(!data.equals("")){
-                SharedPreferences sp = getSharedPreferences("letProperty",MODE_PRIVATE);
-                Log.e("ABC",data);
-                sp.edit().putString("propertyid",data).apply();
+                Log.e("ABCJ","data_sent");
             }
         }
 
         @Override
         protected void onCancelled() {
-
         }
     }
 }

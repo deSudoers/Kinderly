@@ -59,10 +59,10 @@ public class WizRoom extends Fragment{
 
         JSONObject roomInfo = new JSONObject();
         try {
-            roomInfo.put("room_id",roomId);
             roomInfo.put("capacity",cap);
             roomInfo.put("has_attach_bath",ab);
             roomInfo.put("has_ac",ac);
+            roomInfo.put("has_heater",h);
         } catch (JSONException e) {
             e.printStackTrace();
         }

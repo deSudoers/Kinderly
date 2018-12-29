@@ -48,9 +48,9 @@ public class WizAddress extends Fragment{
         sp = getActivity().getSharedPreferences("letProperty",Context.MODE_PRIVATE);
 //        sp.edit().putString("blockNo",blockNo.getText().toString()).apply();
 //        sp.edit().putString("building",building.getText().toString()).apply();
-//        sp.edit().putString("street",street.getText().toString()).apply();
-//        sp.edit().putString("city",city.getText().toString()).apply();
-//        sp.edit().putString("state",state.getText().toString()).apply();
+        sp.edit().putString("propStreet",street.getText().toString()).apply();
+        sp.edit().putString("propCity",city.getText().toString()).apply();
+        sp.edit().putString("propState",state.getText().toString()).apply();
         String address = blockNo.getText().toString();
         address += "," + building.getText().toString();
         address += "," + street.getText().toString();
@@ -59,9 +59,9 @@ public class WizAddress extends Fragment{
 
         sp.edit().putString("propAddress",address).apply();
         if(apt.isChecked())
-            sp.edit().putString("type","Apartment").apply();
+            sp.edit().putString("propType","Apartment").apply();
         else if(bung.isChecked())
-            sp.edit().putString("type","Bungalow").apply();
+            sp.edit().putString("propType","Bungalow").apply();
         else
             sp.edit().putString("type",null).apply();
     }

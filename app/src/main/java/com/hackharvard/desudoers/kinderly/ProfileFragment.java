@@ -65,8 +65,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         mobileNum = view.findViewById(R.id.phone_number);
         SharedPreferences sp = getActivity().getSharedPreferences("profile",Context.MODE_PRIVATE);
         String details = sp.getString("data",null);
-        if(details == null)
-            new JsonTask(getString(R.string.url)+"profile").execute((Void)null);
+        if(details == null) {
+            String result = null;
+            try {
+                result = new JsonTask(getString(R.string.url) + "profile").execute((Void) null).get();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            updateProfileInfo(result);
+            sp.edit().putString("data",result).apply();
+        }
         else
             updateProfileInfo(details);
         return view;
@@ -250,12 +259,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (pd.isShowing()){
+            if (pd.isShowing()) {
                 pd.dismiss();
             }
-            updateProfileInfo(result);
-            SharedPreferences sp = getActivity().getSharedPreferences("profile",Context.MODE_PRIVATE);
-            sp.edit().putString("data",result).apply();
         }
     }
 }
