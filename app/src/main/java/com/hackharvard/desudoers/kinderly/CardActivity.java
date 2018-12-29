@@ -166,8 +166,9 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
             catch (JSONException e){
                 e.printStackTrace();
             }
-            latitude = 0.0;
-            longitude = 0.0;
+            String location[] = json.getString("location").split(",");
+            latitude = Double.parseDouble(location[0]);
+            longitude = Double.parseDouble(location[1]);
             mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.mymap);
             mapFragment.getMapAsync(this);
@@ -201,10 +202,10 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationMarker = mMap.addMarker(new MarkerOptions().position(myLocation));
         if(myLocation.longitude == 0 && myLocation.latitude == 0)
         {
-            locationMarker.setTitle("Location Unknown");
+
         }
         else {
-            locationMarker.setTitle(address);
+
         }
 
         locationMarker.showInfoWindow();
