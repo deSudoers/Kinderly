@@ -16,12 +16,13 @@
         tools:layout_editor_absoluteY="3dp">
 
         <android.support.v7.widget.CardView
-            android:layout_width="337dp"
+            android:layout_width="290dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            app:cardCornerRadius="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,58 +34,61 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/line1"
-                    android:layout_width="310dp"
+                    android:id="@+id/address_line"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:textAlignment="center"
-                    android:textSize="25sp"
-                    app:layout_constraintBottom_toTopOf="@+id/line2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_chainStyle="spread_inside" />
-
-                <TextView
-                    android:id="@+id/line2"
-                    android:layout_width="264dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/questrial"
                     android:text="@string/attached_bath"
-                    android:textSize="20sp"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toTopOf="@+id/line3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/contact_msg"
-                    app:layout_constraintTop_toBottomOf="@+id/line1" />
+                    app:layout_constraintTop_toBottomOf="@+id/price_line" />
+
+                <TextView
+                    android:id="@+id/price_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/questrial"
+                    android:text="Capacity: 1"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@+id/address_line"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="spread" />
 
                 <TextView
                     android:id="@+id/line3"
-                    android:layout_width="264dp"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/questrial"
                     android:text="@string/airconditioner"
-                    android:textSize="20sp"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/line2" />
+                    app:layout_constraintTop_toBottomOf="@+id/address_line" />
 
                 <ImageView
                     android:id="@+id/line2_image"
                     android:layout_width="22dp"
                     android:layout_height="23dp"
                     android:layout_marginStart="10dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/line2"
+                    app:layout_constraintBottom_toBottomOf="@+id/address_line"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/line2"
+                    app:layout_constraintTop_toTopOf="@+id/address_line"
                     card_view:srcCompat="@drawable/tick" />
 
                 <ImageView

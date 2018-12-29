@@ -137,7 +137,7 @@ public class HomeFragmentRent extends Fragment {
 //            dialog.show();
 //            return;
 //        }
-        String location = sp_filter.getString("location", "MIT");
+        String location = sp_filter.getString("location", "Surat");
         float minValue = sp_filter.getFloat("minValue", 0.0f) * 1000;
         float maxValue = sp_filter.getFloat("maxValue", 99.99f) * 1000;
         int rooms = sp_filter.getInt("rooms", 1);
@@ -154,7 +154,6 @@ public class HomeFragmentRent extends Fragment {
         try {
             jsonMsg = new JSONObject(homes);
             cardArrayAdapter.clear();
-            CardArrayAdapter.cardList.clear();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -163,11 +162,12 @@ public class HomeFragmentRent extends Fragment {
 
             try {
                 JSONObject msg = jsonMsg.getJSONObject(String.valueOf(i));
-                String price = "Rs " + msg.getInt("price");
+                String price = "₹ " + msg.getInt("price");
                 String address = msg.getString("address");
                 String property_id = msg.getString("property_id");
 
                 JSONObject jsonMsgUrl = null;
+
                 try {
                     jsonMsgUrl = new JSONObject(msg.getString("images"));
                 }
@@ -195,21 +195,26 @@ public class HomeFragmentRent extends Fragment {
                 }
 
                 List<Room> rooms = new ArrayList<>();
-                for(int j = 0; ; j++){
-                    try {
-                        JSONObject jsonMsgRoomDetails = new JSONObject(jsonMsgRoom.getString(String.valueOf(j)));
-                        String room_id = jsonMsgRoomDetails.getString("room_id");
-                        int capacity = jsonMsgRoomDetails.getInt("capacity");
-                        boolean attachedbathroom = jsonMsgRoomDetails.getBoolean("has_attach_bath");
-                        boolean ac = jsonMsgRoomDetails.getBoolean("has_ac");
-                        rooms.add(new Room(room_id, capacity, attachedbathroom, ac));
-                    }
-                    catch (JSONException e){
-                        e.printStackTrace();
-                        break;
-                    }
-                }
+//                for(int j = 0; ; j++){
+//                    try {
+//                        Log.e("homes_t", "Exc-1");
+//                        JSONObject jsonMsgRoomDetails = new JSONObject(jsonMsgRoom.getString(String.valueOf(j)));
+//                        Log.e("homes_t", "Exc0");
+//                        String room_id = jsonMsgRoomDetails.getString("room_id");
+//                        int capacity = jsonMsgRoomDetails.getInt("capacity");
+//                        Log.e("homes_t", "Exc1");
+//                        boolean attachedbathroom = jsonMsgRoomDetails.getBoolean("has_attach_bath");
+//                        Log.e("homes_t", "Exc2");
+//                        boolean ac = jsonMsgRoomDetails.getBoolean("has_ac");
+//                        rooms.add(new Room(room_id, capacity, attachedbathroom, ac));
+//                    }
+//                    catch (JSONException e){
+//                        e.printStackTrace();
+//                        break;
+//                    }
+//                }
                 Card card = null;
+                Log.e("homes_t", property_id);
                 card = new Card(price, address, property_id, urls, rooms);
                 cardArrayAdapter.add(card);
             } catch (Exception e) {
@@ -255,10 +260,10 @@ public class HomeFragmentRent extends Fragment {
             String data = "";
             JSONObject postData = new JSONObject();
             try{
-                postData.put("address", "MIT");
+                postData.put("address", "Surat");
                 postData.put("min_price", mMinValue);
                 postData.put("max_price", mMaxValue);
-                postData.put("rooms", mRooms);
+                postData.put("num_rooms", mRooms);
                 postData.put("capacity", mCapacity);
                 postData.put("attachedbathroom", mAttachedBathroom);
 

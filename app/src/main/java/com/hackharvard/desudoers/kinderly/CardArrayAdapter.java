@@ -1,11 +1,6 @@
 package com.hackharvard.desudoers.kinderly;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +51,8 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
             LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.list_item_card, parent, false);
             viewHolder = new CardViewHolder();
-            viewHolder.line1 = (TextView) row.findViewById(R.id.line1);
-            viewHolder.line2 = (TextView) row.findViewById(R.id.line2);
+            viewHolder.line1 = (TextView) row.findViewById(R.id.price_line);
+            viewHolder.line2 = (TextView) row.findViewById(R.id.address_line);
             viewHolder.image = (ImageView) row.findViewById(R.id.view_pager);
             row.setTag(viewHolder);
         } else {
