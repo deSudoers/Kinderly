@@ -110,6 +110,8 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/list_card" />
+    <include
+        layout="@layout/list_card"
+        android:layout_width="match_parent" />
 
 </android.support.design.widget.CoordinatorLayout>
