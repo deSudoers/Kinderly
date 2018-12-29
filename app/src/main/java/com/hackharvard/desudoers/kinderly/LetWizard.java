@@ -35,7 +35,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
     Button nextButton;
     Button prevButton;
     int pageNumber = 0;
-    int numOfPages = 5;
+    int numOfPages = 6;
     int numOfRooms = 1;
     TextView pageTitle;
     private SharedPreferences sp;
@@ -45,6 +45,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
     WizPictures wpics = new WizPictures();
     ArrayList<WizRoom> wr = new ArrayList<>();
     WizExtraFeatures wef = new WizExtraFeatures();
+    WizPrice wp = new WizPrice();
 
 
     @Override
@@ -61,6 +62,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         sp.edit().putString("propRooms",null).apply();
         sp.edit().putString("propImages",null).apply();
         sp.edit().putString("propId",null).apply();
+        sp.edit().putInt("propPrice",0).apply();
 
         pageTitle = findViewById(R.id.pageTitle);
         pageTitle.setText(R.string.greetings);
@@ -119,6 +121,8 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                         Log.e("XYZ",e.toString());
                     }
                     break;
+            case 5: wp.getPrice();
+                    break;
         }
     }
 
@@ -137,21 +141,21 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
             case 4: loadFragment(wr.get(pageNumber-4));
                     break;
             case 5: if(numOfRooms>0)
-                    {
-                        loadFragment(wef);
-                        button.setText(R.string.finish);
-                    }
+                        loadFragment(wp);
                     else
                         pageNumber--;
                     break;
-            case 6: JSONObject property = null;
+            case 6: loadFragment(wef);
+                    button.setText(R.string.finish);
+                    break;
+            case 7: JSONObject property = null;
                     String data = null;
                     String propId = null;
                     try {
                         String addr = sp.getString("propAddress", null);
                         property = new JSONObject();
                         property.put("address",addr);
-                        property.put("price",20000);
+                        property.put("price",sp.getInt("propPrice",0));
                         property.put("type",sp.getString("propType",null));
                         data = property.toString();
                         property.put("street",sp.getString("propType",null));
@@ -187,6 +191,8 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                     catch (JSONException e){
                         e.printStackTrace();
                     }
+                    getSupportFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    finish();
                     break;
         }
     }
