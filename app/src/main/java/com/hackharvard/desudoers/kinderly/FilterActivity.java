@@ -95,15 +95,13 @@ public class FilterActivity extends AppCompatActivity {
         view_rooms = getLayoutInflater().inflate(R.layout.filter_button, null);
         view_capacity = getLayoutInflater().inflate(R.layout.filter_button, null);
         view_attachedbathroom = getLayoutInflater().inflate(R.layout.filter_button, null);
-        view_clear = getLayoutInflater().inflate(R.layout.filter_button, null);
+        view_clear = getLayoutInflater().inflate(R.layout.filter_button_empty, null);
 
         button_location = view_location.findViewById(R.id.ivClearSearchText);
         button_range = view_range.findViewById(R.id.ivClearSearchText);
         button_rooms = view_rooms.findViewById(R.id.ivClearSearchText);
         button_capacity = view_capacity.findViewById(R.id.ivClearSearchText);
         button_attachedbathroom = view_attachedbathroom.findViewById(R.id.ivClearSearchText);
-        button_clear = view_clear.findViewById(R.id.ivClearSearchText);
-        button_clear.setVisibility(View.INVISIBLE);
 
         text_location = view_location.findViewById(R.id.etSearchToolbar);
         text_range = view_range.findViewById(R.id.etSearchToolbar);
