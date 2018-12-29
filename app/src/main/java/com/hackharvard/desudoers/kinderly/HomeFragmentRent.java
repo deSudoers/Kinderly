@@ -1,29 +1,27 @@
 package com.hackharvard.desudoers.kinderly;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -32,7 +30,6 @@ import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragmen
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -40,18 +37,24 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class HomeFragmentRent extends Fragment {
+public class HomeFragmentRent extends Fragment implements SortDialogFragment.SortDialogListener{
     private CardArrayAdapter cardArrayAdapter;
     private ListView listView;
     private SupportPlaceAutocompleteFragment autocompleteFragment;
+    private LinearLayout linearLayout;
+    private android.support.v7.widget.Toolbar toolbar;
+    private AppBarLayout appBarLayout;
+    private View view_location, view_range, view_rooms, view_capacity, view_attachedbathroom;
+    private EditText text_location, text_range, text_rooms, text_capacity, text_attachedbathroom;
+
 
     private SharedPreferences sp_login, sp_filter;
-
-    private String last_action = "ACTION_MOVE";
 
     @Nullable
     @Override
@@ -63,6 +66,23 @@ public class HomeFragmentRent extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState){
         sp_login = getContext().getSharedPreferences("login", MODE_PRIVATE);
         sp_filter = getContext().getSharedPreferences("filter", MODE_PRIVATE);
+
+        linearLayout = getView().findViewById(R.id.filter_buttons);
+
+        toolbar = getView().findViewById(R.id.toolbar);
+        appBarLayout = getView().findViewById(R.id.app_bar);
+
+        view_location = getLayoutInflater().inflate(R.layout.filter_button_empty, null);
+        view_range = getLayoutInflater().inflate(R.layout.filter_button_empty, null);
+        view_rooms = getLayoutInflater().inflate(R.layout.filter_button_empty, null);
+        view_capacity = getLayoutInflater().inflate(R.layout.filter_button_empty, null);
+        view_attachedbathroom = getLayoutInflater().inflate(R.layout.filter_button_empty, null);
+
+        text_location = view_location.findViewById(R.id.etSearchToolbar);
+        text_range = view_range.findViewById(R.id.etSearchToolbar);
+        text_rooms = view_rooms.findViewById(R.id.etSearchToolbar);
+        text_capacity = view_capacity.findViewById(R.id.etSearchToolbar);
+        text_attachedbathroom = view_attachedbathroom.findViewById(R.id.etSearchToolbar);
 
         autocompleteFragment = new SupportPlaceAutocompleteFragment();
         android.support.v4.app.FragmentManager fm = getFragmentManager();
@@ -91,6 +111,16 @@ public class HomeFragmentRent extends Fragment {
         listView = (ListView) getView().findViewById(R.id.cardList);
         listView.setNestedScrollingEnabled(true);
         listView.setDivider(null);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getActivity().finish();
+                Intent i = new Intent(getContext(), CardActivity.class);
+                i.putExtra("id", position);
+                startActivity(i);
+            }
+        });
+
         cardArrayAdapter = new CardArrayAdapter(getContext(), R.layout.list_item_card);
 
         Button mFilterButton = (Button) getView().findViewById(R.id.filter);
@@ -105,11 +135,86 @@ public class HomeFragmentRent extends Fragment {
         mSortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showNoticeDialog();
             }
         });
 
         queryHomes();
+    }
+
+    private void showNoticeDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new SortDialogFragment();
+        dialog.setTargetFragment(this, 0);
+        dialog.show(getFragmentManager(), "SortDialogFragment");
+    }
+
+    // The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the NoticeDialogFragment.NoticeDialogListener interface
+    @Override
+    public void onDialogPositiveClick(int id) {
+        // User touched the dialog's positive button
+        switch (id){
+            case 0: ascending();
+                    break;
+            case 1: descending();
+                    break;
+            case 2: favourite();
+                    break;
+        }
+    }
+
+    private void ascending(){
+        int size = cardArrayAdapter.getCount();
+        Card cards[] = new Card[size];
+        CardArrayAdapter.cardList.toArray(cards);
+        for(int i = 0; i < size; ++i){
+            for(int j=0; j < size - i - 1; ++j){
+                if(Double.parseDouble(cards[j].getPrice()) > Double.parseDouble(cards[j+1].getPrice())){
+                    Card temp = cards[j];
+                    cards[j] = cards[j+1];
+                    cards[j+1] = temp;
+                }
+            }
+        }
+        CardArrayAdapter.cardList = Arrays.asList(cards);
+        cardArrayAdapter.notifyDataSetChanged();
+        listView.setAdapter(cardArrayAdapter);
+    }
+
+    private void descending(){
+        int size = cardArrayAdapter.getCount();
+        Card cards[] = new Card[size];
+        CardArrayAdapter.cardList.toArray(cards);
+        for(int i = 0; i < size; ++i){
+            for(int j=0; j < size - i - 1; ++j){
+                if(Double.parseDouble(cards[j].getPrice()) < Double.parseDouble(cards[j+1].getPrice())){
+                    Card temp = cards[j];
+                    cards[j] = cards[j+1];
+                    cards[j+1] = temp;
+                }
+            }
+        }
+        CardArrayAdapter.cardList = Arrays.asList(cards);
+        cardArrayAdapter.notifyDataSetChanged();
+        listView.setAdapter(cardArrayAdapter);
+    }
+
+    private void favourite(){
+        int size = cardArrayAdapter.getCount();
+        Card cards[] = new Card[size];
+        int start = 0, end = size;
+        for(int j = 0; j < size; ++j){
+            Card card = cardArrayAdapter.getItem(j);
+            if(card.isFavourite())
+                cards[start++] = card;
+            else
+                cards[--end] = card;
+        }
+        CardArrayAdapter.cardList = Arrays.asList(cards);
+        cardArrayAdapter.notifyDataSetChanged();
+        listView.setAdapter(cardArrayAdapter);
     }
 
     private void goToFilterActivity(){
@@ -162,7 +267,7 @@ public class HomeFragmentRent extends Fragment {
 
             try {
                 JSONObject msg = jsonMsg.getJSONObject(String.valueOf(i));
-                String price = "₹ " + msg.getInt("price");
+                String price = msg.getInt("price")+"";
                 String address = msg.getString("address");
                 String property_id = msg.getString("property_id");
 
@@ -185,37 +290,10 @@ public class HomeFragmentRent extends Fragment {
                         break;
                     }
                 }
-
-                JSONObject jsonMsgRoom = null;
-                try {
-                    jsonMsgRoom = new JSONObject(msg.getString("rooms"));
-                }
-                catch (JSONException e){
-                    e.printStackTrace();
-                }
-
-                List<Room> rooms = new ArrayList<>();
-//                for(int j = 0; ; j++){
-//                    try {
-//                        Log.e("homes_t", "Exc-1");
-//                        JSONObject jsonMsgRoomDetails = new JSONObject(jsonMsgRoom.getString(String.valueOf(j)));
-//                        Log.e("homes_t", "Exc0");
-//                        String room_id = jsonMsgRoomDetails.getString("room_id");
-//                        int capacity = jsonMsgRoomDetails.getInt("capacity");
-//                        Log.e("homes_t", "Exc1");
-//                        boolean attachedbathroom = jsonMsgRoomDetails.getBoolean("has_attach_bath");
-//                        Log.e("homes_t", "Exc2");
-//                        boolean ac = jsonMsgRoomDetails.getBoolean("has_ac");
-//                        rooms.add(new Room(room_id, capacity, attachedbathroom, ac));
-//                    }
-//                    catch (JSONException e){
-//                        e.printStackTrace();
-//                        break;
-//                    }
-//                }
+//                boolean favourite = msg.getBoolean("favourite");
+                boolean favourite = true;
                 Card card = null;
-                Log.e("homes_t", property_id);
-                card = new Card(price, address, property_id, urls, rooms);
+                card = new Card(price, address, property_id, urls, favourite);
                 cardArrayAdapter.add(card);
             } catch (Exception e) {
                 break;
@@ -223,15 +301,38 @@ public class HomeFragmentRent extends Fragment {
         }
         listView.setAdapter(cardArrayAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getActivity().finish();
-                Intent i = new Intent(getContext(), CardActivity.class);
-                i.putExtra("id", position);
-                startActivity(i);
-            }
-        });
+        boolean flag = false;
+        linearLayout.removeAllViews();
+        if(sp_filter.getBoolean("location_bool", false)){
+            flag = true;
+            linearLayout.addView(view_location);
+            text_location.setText(sp_filter.getString("location_name", ""));
+        }
+        if(sp_filter.getBoolean("range_bool", false)){
+            flag = true;
+            linearLayout.addView(view_range);
+            text_range.setText(sp_filter.getFloat("minValue", 0.0f)+"k - "+ sp_filter.getFloat("maxValue", 99.99f) +"k");
+        }
+        if(sp_filter.getBoolean("rooms_bool", false)){
+            flag = true;
+            linearLayout.addView(view_rooms);
+            text_rooms.setText("Rooms: " + sp_filter.getInt("rooms", 1));
+        }
+        if(sp_filter.getBoolean("capacity_bool", false)){
+            flag = true;
+            linearLayout.addView(view_capacity);
+            text_capacity.setText("Capacity: " + sp_filter.getInt("capacity", 1));
+        }
+        if(sp_filter.getBoolean("attachedbathroom_bool", false)){
+            flag = true;
+            linearLayout.addView(view_attachedbathroom);
+            text_attachedbathroom.setText(sp_filter.getInt("attachedbathroom", 1) == 1 ? "Attached Bathroom" : "No Bathroom");
+        }
+
+        if(flag){
+            toolbar.setLayoutParams(new CollapsingToolbarLayout.LayoutParams(CollapsingToolbarLayout.LayoutParams.MATCH_PARENT, 430, Gravity.BOTTOM));
+            appBarLayout.setLayoutParams(new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, 730));
+        }
     }
 
     public class QueryTask extends AsyncTask<Void, Void, String> {
@@ -261,11 +362,16 @@ public class HomeFragmentRent extends Fragment {
             JSONObject postData = new JSONObject();
             try{
                 postData.put("address", "Surat");
-                postData.put("min_price", mMinValue);
-                postData.put("max_price", mMaxValue);
-                postData.put("num_rooms", mRooms);
-                postData.put("capacity", mCapacity);
-                postData.put("attachedbathroom", mAttachedBathroom);
+//                if(sp_filter.getBoolean("range_bool", false)) {
+                    postData.put("min_price", mMinValue);
+                    postData.put("max_price", mMaxValue);
+//                }
+//                if(sp_filter.getBoolean("rooms_bool", false))
+                    postData.put("num_rooms", mRooms);
+                if(sp_filter.getBoolean("capacity_bool", false))
+                    postData.put("capacity", mCapacity);
+                if(sp_filter.getBoolean("attachedbathroom_bool", false))
+                    postData.put("attachedbathroom", mAttachedBathroom);
 
                 Log.e("homes", postData.toString());
                 HttpURLConnection httpURLConnection = null;

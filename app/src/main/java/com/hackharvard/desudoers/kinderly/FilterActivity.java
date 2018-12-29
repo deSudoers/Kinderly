@@ -95,15 +95,13 @@ public class FilterActivity extends AppCompatActivity {
         view_rooms = getLayoutInflater().inflate(R.layout.filter_button, null);
         view_capacity = getLayoutInflater().inflate(R.layout.filter_button, null);
         view_attachedbathroom = getLayoutInflater().inflate(R.layout.filter_button, null);
-        view_clear = getLayoutInflater().inflate(R.layout.filter_button, null);
+        view_clear = getLayoutInflater().inflate(R.layout.filter_button_empty, null);
 
         button_location = view_location.findViewById(R.id.ivClearSearchText);
         button_range = view_range.findViewById(R.id.ivClearSearchText);
         button_rooms = view_rooms.findViewById(R.id.ivClearSearchText);
         button_capacity = view_capacity.findViewById(R.id.ivClearSearchText);
         button_attachedbathroom = view_attachedbathroom.findViewById(R.id.ivClearSearchText);
-        button_clear = view_clear.findViewById(R.id.ivClearSearchText);
-        button_clear.setVisibility(View.INVISIBLE);
 
         text_location = view_location.findViewById(R.id.etSearchToolbar);
         text_range = view_range.findViewById(R.id.etSearchToolbar);
@@ -147,8 +145,8 @@ public class FilterActivity extends AppCompatActivity {
                 range_bool = false;
                 mSeekBarRange.setSelectedMinValue(0.0f);
                 mSeekBarRange.setSelectedMaxValue(99.99f);
-                mSeekBarRangeMin.setText("Rs 0.0k");
-                mSeekBarRangeMax.setText("Rs 99.99k");
+                mSeekBarRangeMin.setText("₹ 0.0k");
+                mSeekBarRangeMax.setText("₹ 99.99k");
                 refresh();
             }
         });
@@ -190,8 +188,8 @@ public class FilterActivity extends AppCompatActivity {
                 range_bool = false;
                 mSeekBarRange.setSelectedMinValue(0.0f);
                 mSeekBarRange.setSelectedMaxValue(99.99f);
-                mSeekBarRangeMin.setText("Rs 0.0k");
-                mSeekBarRangeMax.setText("Rs 99.99k");
+                mSeekBarRangeMin.setText("₹ 0.0k");
+                mSeekBarRangeMax.setText("₹ 99.99k");
                 rooms_bool = false;
                 mSeekBarRoom.setProgress(0);
                 capacity_bool = false;
@@ -229,8 +227,8 @@ public class FilterActivity extends AppCompatActivity {
         mSeekBarRange.setRangeValues(0.00f, 99.99f);
         mSeekBarRangeMin = (TextView) findViewById(R.id.seekbarmin);
         mSeekBarRangeMax = (TextView) findViewById(R.id.seekbarmax);
-        mSeekBarRangeMin.setText("Rs 0.0k");
-        mSeekBarRangeMax.setText("Rs 99.99k");
+        mSeekBarRangeMin.setText("₹ 0.0k");
+        mSeekBarRangeMax.setText("₹ 99.99k");
         if(range_bool){
             mSeekBarRange.setSelectedMinValue(minValue);
             mSeekBarRange.setSelectedMaxValue(maxValue);
@@ -240,8 +238,8 @@ public class FilterActivity extends AppCompatActivity {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Float minValue1, Float maxValue1) {
                 //Now you have the minValue and maxValue of your RangeSeekbar
-                mSeekBarRangeMin.setText("Rs "+minValue+"k");
-                mSeekBarRangeMax.setText("Rs "+maxValue+"k");
+                mSeekBarRangeMin.setText("₹ "+minValue+"k");
+                mSeekBarRangeMax.setText("₹ "+maxValue+"k");
                 minValue = minValue1;
                 maxValue = maxValue1;
                 range_bool = true;

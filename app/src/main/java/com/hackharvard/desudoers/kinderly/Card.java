@@ -3,7 +3,6 @@ package com.hackharvard.desudoers.kinderly;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -15,10 +14,10 @@ public class Card {
     private String address;
     private Bitmap[] images;
     private String property_id;
-    private Room[] rooms;
     private setBitmapImage set;
+    private boolean favourite;
 
-    public Card(String price, String address, String property_id, List<String> urls, List<Room> rooms) {
+    public Card(String price, String address, String property_id, List<String> urls, boolean favourite) {
         this.price = price;
         this.address = address;
         this.property_id = property_id;
@@ -28,8 +27,7 @@ public class Card {
             set = new setBitmapImage();
             set.execute(urls.get(i), i+"");
         }
-        this.rooms = new Room[rooms.size()];
-        this.rooms = rooms.toArray(this.rooms);
+        this.favourite = favourite;
     }
 
     public String getPrice() { return price; }
@@ -41,6 +39,12 @@ public class Card {
     public Bitmap[] getImages() { return images; }
 
     public String getPropertyId() { return property_id;}
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean fav) { favourite = fav; }
 
     public void stop(){
         set.cancel(true);
@@ -56,7 +60,7 @@ public class Card {
         protected Bitmap doInBackground(String... params) {
             Bitmap bitmap = null;
             if(set.isCancelled()) {
-                return bitmap;
+                return null;
             }
             index = Integer.parseInt(params[1]);
             try {
@@ -77,28 +81,4 @@ public class Card {
             images[index] = result;
         }
     }
-}
-
-class Room {
-    private String room_id;
-    private int capacity;
-    private boolean attachedbathroom;
-    private boolean ac;
-
-    Room (String room_id, int capacity, boolean attachedbathroom, boolean ac){
-        this.room_id = room_id;
-        this.capacity = capacity;
-        this.attachedbathroom = attachedbathroom;
-        this.ac = ac;
-    }
-
-    public String getRoomId() { return room_id; }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public boolean getAttachedBathroom() { return attachedbathroom; }
-
-    public boolean getAc() { return ac;}
 }
