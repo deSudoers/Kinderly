@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/bgcolor">
 
     <TextView
         android:id="@+id/pageTitle"
@@ -14,24 +14,33 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="25dp"
-        android:textSize="35sp"
+        android:textSize="45sp"
+        android:fontFamily="@font/questrial"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.081"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/capacity"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/hcapacity"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
+        android:layout_margin="25dp"
         android:layout_marginTop="45dp"
-        android:hint="@string/capacity"
-        android:textSize="20sp"
-        android:ems="10"
-        android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pageTitle"/>
+        app:layout_constraintTop_toBottomOf="@+id/pageTitle">
+
+        <EditText
+            android:id="@+id/capacity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:fontFamily="@font/questrial"
+            android:hint="@string/capacity"
+            android:inputType="number"
+            android:textSize="20sp" />
+    </android.support.design.widget.TextInputLayout>
 
 
     <TextView
@@ -42,28 +51,36 @@
         android:layout_marginTop="35dp"
         android:text="@string/bathroom"
         android:textSize="22sp"
+        android:textColor="@color/colorPrimary"
+        android:fontFamily="@font/questrial"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/capacity" />
+        app:layout_constraintTop_toBottomOf="@+id/hcapacity" />
 
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="42dp"
         android:orientation="horizontal"
-        android:layout_marginStart="140dp"
-        android:layout_marginTop="45dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/capacity" >
+        app:layout_constraintStart_toEndOf="@+id/bathroom"
+        app:layout_constraintTop_toBottomOf="@+id/hcapacity">
 
         <RadioButton
             android:id="@+id/yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yes" />
-        <RadioButton android:id="@+id/no"
+            android:fontFamily="@font/questrial"
+            android:text="@string/yes"
+            android:textColor="@color/colorPrimary" />
+
+        <RadioButton
+            android:id="@+id/no"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
-            android:text="@string/no" />
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/questrial"
+            android:text="@string/no"
+            android:textColor="@color/colorPrimary" />
     </RadioGroup>
 
     <TextView
@@ -73,29 +90,36 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="25dp"
         android:text="@string/ac"
+        android:textColor="@color/colorPrimary"
         android:textSize="22sp"
+        android:fontFamily="@font/questrial"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bathroom" />
 
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginStart="140dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="21dp"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bathroom" >
+        app:layout_constraintTop_toBottomOf="@+id/bathroom">
 
         <RadioButton
             android:id="@+id/ac_yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yes" />
-        <RadioButton android:id="@+id/ac_no"
+            android:fontFamily="@font/questrial"
+            android:text="@string/yes"
+            android:textColor="@color/colorPrimary" />
+
+        <RadioButton
+            android:id="@+id/ac_no"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
-            android:text="@string/no" />
+            android:layout_marginStart="10dp"
+            android:text="@string/no"
+            android:textColor="@color/colorPrimary" />
     </RadioGroup>
 
     <TextView
@@ -103,8 +127,10 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
+        android:fontFamily="@font/questrial"
         android:layout_marginTop="40dp"
         android:text="@string/heater"
+        android:textColor="@color/colorPrimary"
         android:textSize="22sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ac" />
@@ -112,24 +138,28 @@
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginStart="140dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="37dp"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ac" >
+        app:layout_constraintTop_toBottomOf="@+id/ac">
 
         <RadioButton
             android:id="@+id/h_yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/questrial"
+            android:textColor="@color/colorPrimary"
             android:text="@string/yes" />
-        <RadioButton android:id="@+id/h_no"
+
+        <RadioButton
+            android:id="@+id/h_no"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/questrial"
+            android:textColor="@color/colorPrimary"
             android:text="@string/no" />
     </RadioGroup>
-
-
 
 </android.support.constraint.ConstraintLayout>

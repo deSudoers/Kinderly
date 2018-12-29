@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/bgcolor">
 
     <TextView
         android:id="@+id/pageTitle"
@@ -14,8 +14,10 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="25dp"
-        android:textSize="35sp"
+        android:textSize="45sp"
         android:text="@string/titleAddr"
+        android:textColor="@color/colorPrimary"
+        android:fontFamily="@font/questrial"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.081"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,11 +25,13 @@
 
     <TextView
         android:id="@+id/type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="45dp"
+        android:fontFamily="@font/questrial"
         android:text="@string/type"
+        android:textColor="@color/colorPrimary"
         android:textSize="22sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pageTitle" />
@@ -35,88 +39,121 @@
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginStart="90dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="41dp"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pageTitle" >
+        app:layout_constraintTop_toBottomOf="@+id/pageTitle">
 
         <RadioButton
             android:id="@+id/apt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/questrial"
             android:text="@string/apt" />
-        <RadioButton android:id="@+id/bung"
+
+        <RadioButton
+            android:id="@+id/bung"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/questrial"
             android:text="@string/bung" />
     </RadioGroup>
 
-    <EditText
-        android:id="@+id/block_no"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/hblock_no"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:hint="@string/block_no"
-        android:textSize="20sp"
-        android:ems="10"
-        android:inputType="text"
+        android:layout_marginTop="25dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/type"/>
+        app:layout_constraintTop_toBottomOf="@+id/type">
 
-    <EditText
-        android:id="@+id/building"
-        android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/block_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:ems="10"
+            android:fontFamily="@font/questrial"
+            android:hint="@string/block_no"
+            android:inputType="text"
+            android:textSize="20sp" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:hint="@string/building_name"
-        android:textSize="20sp"
-        android:ems="10"
-        android:inputType="text"
+        android:id="@+id/hbuilding"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/block_no"/>
+        app:layout_constraintTop_toBottomOf="@+id/hblock_no">
+        <EditText
+            android:id="@+id/building"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:fontFamily="@font/questrial"
+            android:hint="@string/building_name"
+            android:textSize="20sp"
+            android:ems="10"
+            android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/street"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:hint="@string/street_name"
-        android:textSize="20sp"
-        android:ems="10"
-        android:inputType="text"
+        android:id="@+id/hstreet"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/building"/>
+        app:layout_constraintTop_toBottomOf="@+id/hbuilding">
+        <EditText
+            android:id="@+id/street"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/questrial"
+            android:layout_margin="25dp"
+            android:hint="@string/street_name"
+            android:textSize="20sp"
+            android:ems="10"
+            android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/city"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:hint="@string/city"
-        android:textSize="20sp"
-        android:ems="10"
-        android:inputType="text"
+        android:id="@+id/hcity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/street"/>
+        app:layout_constraintTop_toBottomOf="@+id/hstreet">
+        <EditText
+            android:id="@+id/city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:fontFamily="@font/questrial"
+            android:hint="@string/city"
+            android:textSize="20sp"
+            android:ems="10"
+            android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/state"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:hint="@string/state"
-        android:textSize="20sp"
-        android:ems="10"
-        android:inputType="text"
+        android:id="@+id/hstate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/city"/>
+        app:layout_constraintTop_toBottomOf="@+id/hcity">
 
+        <EditText
+            android:id="@+id/state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:ems="10"
+            android:fontFamily="@font/questrial"
+            android:hint="@string/state"
+            android:inputType="text"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent" />
+    </android.support.design.widget.TextInputLayout>
 
 </android.support.constraint.ConstraintLayout>

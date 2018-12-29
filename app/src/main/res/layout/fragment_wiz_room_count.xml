@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/bgcolor">
 
     <TextView
         android:id="@+id/pageTitle"
@@ -15,25 +15,33 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="25dp"
-        android:textSize="35sp"
+        android:textSize="45sp"
+        android:fontFamily="@font/questrial"
         android:text="@string/room_count_title"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.081"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <EditText
-        android:id="@+id/room_count"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:hint="@string/room_count"
-        android:textSize="20sp"
-        android:ems="10"
-        android:inputType="number"
+        android:layout_margin="25dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pageTitle"/>
+        app:layout_constraintTop_toBottomOf="@+id/pageTitle">
+
+        <EditText
+            android:id="@+id/room_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:fontFamily="@font/questrial"
+            android:hint="@string/room_count"
+            android:inputType="number"
+            android:textSize="20sp" />
+    </android.support.design.widget.TextInputLayout>
 
 </android.support.constraint.ConstraintLayout>

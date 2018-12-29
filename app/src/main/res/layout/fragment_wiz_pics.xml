@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/bgcolor">
 
     <TextView
         android:id="@+id/pageTitle"
@@ -13,104 +13,48 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="25dp"
+        android:fontFamily="@font/questrial"
         android:text="@string/titlePics"
-        android:textSize="35sp"
+        android:textSize="45sp"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.081"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/gallery"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/pageText"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
         android:layout_marginTop="25dp"
-        android:text="@string/gallery"
-        app:layout_constraintEnd_toStartOf="@+id/camera"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:fontFamily="@font/questrial"
+        android:text="Select images using gallery or camera"
+        android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pageTitle" />
 
     <Button
+        android:id="@+id/gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/gallery"
+        app:layout_constraintEnd_toStartOf="@+id/camera"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pageText" />
+
+    <Button
         android:id="@+id/camera"
         android:layout_width="wrap_content"
-        android:layout_height="44dp"
-        android:layout_marginTop="25dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="@string/cam"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/gallery"
-        app:layout_constraintTop_toBottomOf="@+id/pageTitle" />
-
-    <!--<android.support.constraint.ConstraintLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="278dp"-->
-    <!--android:layout_marginTop="40dp"-->
-    <!--android:layout_marginBottom="8dp"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintTop_toBottomOf="@+id/gallery">-->
-
-    <!--<ImageView-->
-    <!--android:id="@+id/img1"-->
-    <!--android:layout_width="120dp"-->
-    <!--android:layout_height="120dp"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--app:layout_constraintEnd_toStartOf="@+id/img2"-->
-    <!--app:layout_constraintHorizontal_bias="0.5"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<ImageView-->
-    <!--android:id="@+id/img2"-->
-    <!--android:layout_width="120dp"-->
-    <!--android:layout_height="120dp"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--app:layout_constraintEnd_toStartOf="@+id/img3"-->
-    <!--app:layout_constraintHorizontal_bias="0.5"-->
-    <!--app:layout_constraintStart_toEndOf="@+id/img1"-->
-    <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<ImageView-->
-    <!--android:id="@+id/img3"-->
-    <!--android:layout_width="120dp"-->
-    <!--android:layout_height="120dp"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintHorizontal_bias="0.5"-->
-    <!--app:layout_constraintStart_toEndOf="@+id/img2"-->
-    <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<ImageView-->
-    <!--android:id="@+id/img4"-->
-    <!--android:layout_width="120dp"-->
-    <!--android:layout_height="120dp"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--app:layout_constraintEnd_toStartOf="@+id/img6"-->
-    <!--app:layout_constraintHorizontal_bias="0.5"-->
-    <!--app:layout_constraintStart_toEndOf="@+id/img5"-->
-    <!--app:layout_constraintTop_toBottomOf="@+id/img2" />-->
-
-    <!--<ImageView-->
-    <!--android:id="@+id/img5"-->
-    <!--android:layout_width="120dp"-->
-    <!--android:layout_height="120dp"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--app:layout_constraintEnd_toStartOf="@+id/img4"-->
-    <!--app:layout_constraintHorizontal_bias="0.5"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toBottomOf="@+id/img1" />-->
-
-    <!--<ImageView-->
-    <!--android:id="@+id/img6"-->
-    <!--android:layout_width="120dp"-->
-    <!--android:layout_height="120dp"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintHorizontal_bias="0.5"-->
-    <!--app:layout_constraintStart_toEndOf="@+id/img4"-->
-    <!--app:layout_constraintTop_toBottomOf="@+id/img3" />-->
-
-    <!--</android.support.constraint.ConstraintLayout>-->
+        app:layout_constraintTop_toBottomOf="@+id/pageText" />
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/image_grid"
@@ -129,9 +73,10 @@
         android:verticalSpacing="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/camera" />
+        app:layout_constraintTop_toBottomOf="@+id/camera"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </android.support.constraint.ConstraintLayout>
