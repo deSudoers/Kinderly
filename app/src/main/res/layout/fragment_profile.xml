@@ -8,85 +8,118 @@
     <ImageView
         android:id="@+id/profile_cover"
         android:layout_width="match_parent"
-        android:layout_height="210dp"
-        android:background="@color/colorAccent"
-        android:contentDescription="@string/coverpic" />
+        android:layout_height="300dp"
+        android:background="@color/colorPrimaryDark"
+        android:contentDescription="@string/coverpic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/profile_photo"
-
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="150dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="8dp"
+        android:adjustViewBounds="true"
         android:background="@drawable/kinderly"
         android:contentDescription="@string/propic"
-        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_cover"
+        app:layout_constraintEnd_toEndOf="@+id/profile_cover"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/profile_cover"
+        app:layout_constraintVertical_bias="0.75" />
 
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/first_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="25dp"
         android:text="@string/app_name"
         android:textAlignment="center"
+        android:textColor="@color/bgcolor"
         android:textSize="35sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_photo" />
+        app:layout_constraintBottom_toBottomOf="@+id/profile_photo"
+        app:layout_constraintStart_toEndOf="@+id/profile_photo"
+        app:layout_constraintTop_toTopOf="@+id/profile_photo"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/second_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textColor="@color/bgcolor"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/profile_photo"
+        app:layout_constraintTop_toBottomOf="@+id/first_name" />
 
     <TextView
         android:id="@+id/phone_number"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="8dp"
         android:text="@string/prompt_number"
         android:textAlignment="center"
+        android:textColor="@color/colorSecondary"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_name" />
+        app:layout_constraintStart_toEndOf="@+id/profile_photo"
+        app:layout_constraintTop_toBottomOf="@+id/second_name" />
 
     <TextView
         android:id="@+id/age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="25dp"
         android:text="@string/age"
         android:textAlignment="center"
+        android:textColor="@color/colorSecondary"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profile_photo"
         app:layout_constraintTop_toBottomOf="@+id/phone_number" />
 
     <Button
         android:id="@+id/change_pro_pic_gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="44dp"
         android:text="@string/gallery"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintHorizontal_bias="0.185"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/age" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_cover" />
 
     <Button
         android:id="@+id/change_pro_pic_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="44dp"
         android:text="@string/cam"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintHorizontal_bias="0.77"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/age" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_cover" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/profile_cover"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profile_cover"
+        app:srcCompat="@drawable/title" />
 
 
 </android.support.constraint.ConstraintLayout>

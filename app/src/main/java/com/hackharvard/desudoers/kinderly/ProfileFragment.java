@@ -1,7 +1,9 @@
 package com.hackharvard.desudoers.kinderly;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -45,7 +47,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     Button changePicGallery;
     Button changePicCamera;
     ImageView proPic;
-    TextView name,age,mobileNum;
+    TextView first_name,second_name,age,mobileNum;
     ProgressDialog pd;
     @Nullable
     @Override
@@ -56,7 +58,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         proPic = view.findViewById(R.id.profile_photo);
         changePicGallery.setOnClickListener(this);
         changePicCamera.setOnClickListener(this);
-        name = view.findViewById(R.id.user_name);
+        proPic.setOnClickListener(this);
+        first_name = view.findViewById(R.id.first_name);
+        second_name = view.findViewById(R.id.second_name);
         age = view.findViewById(R.id.age);
         mobileNum = view.findViewById(R.id.phone_number);
         SharedPreferences sp = getActivity().getSharedPreferences("profile",Context.MODE_PRIVATE);
@@ -70,20 +74,24 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     public void updateProfileInfo(String details)
     {
-        String userName = null;
+        String firstName = null,secondName=null;
         String userMobile = null;
+        String userAge = null;
         try {
             JSONObject profileData = new JSONObject(details);
-            userName = profileData.getJSONObject("user").getString("first_name");
-            userName += " " + profileData.getJSONObject("user").getString("last_name");
+            firstName = profileData.getJSONObject("user").getString("first_name").toUpperCase();
+            secondName = profileData.getJSONObject("user").getString("last_name").toUpperCase();
             userMobile = profileData.getJSONObject("user").getString("mobile");
+            userAge = profileData.getJSONObject("user").getString("age");
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
         finally {
-            name.setText(userName);
+            first_name.setText(firstName);
+            second_name.setText(secondName);
             mobileNum.setText(userMobile);
-            age.setText("180");
+            age.setText(userAge);
         }
     }
 
@@ -93,15 +101,33 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         switch(view.getId())
         {
             case R.id.change_pro_pic_gallery:
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , 1);
+
                 break;
 
             case R.id.change_pro_pic_camera:
-                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePicture, 0);
                 break;
+
+            case R.id.profile_photo:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Update Profile Photo");
+                builder.setMessage("Select image using");
+                builder.setPositiveButton("Gallery", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(pickPhoto , 1);
+                    }
+                });
+                builder.setNegativeButton("Camera", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(takePicture, 0);
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
         }
 
     }
