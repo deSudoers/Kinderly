@@ -3,6 +3,7 @@ package com.hackharvard.desudoers.kinderly;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -171,6 +172,11 @@ public class RegisterActivity extends AppCompatActivity {
                 focusView = mAgeView;
                 cancel = true;
             }
+            if (age > 35 && age < 60){
+                mAgeView.setError("People between age 35-60 cannot be part of Kinderly");
+                focusView = mAgeView;
+                cancel = true;
+            }
         }
         catch (NumberFormatException nfe){
             nfe.printStackTrace();
@@ -330,11 +336,14 @@ public class RegisterActivity extends AppCompatActivity {
             switch (success) {
                 case "Register Successful.":
                     finish();
-                    goToMainActivity();
+                    if(mAge <= 35)
+                        goToRentActivity();
+                    else
+                        goToLetActivity();
                     sp_login.edit().putBoolean("logged", true).apply();
                     break;
                 case "Mobile Number Already Exists.":
-                    mPasswordView.setError(success);
+                    mNumberView.setError(success);
                     mNumberView.requestFocus();
                     break;
                 default:
@@ -351,9 +360,14 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void goToMainActivity(){
-//        Intent i = new Intent(this, MainActivity.class);
-//        startActivity(i);
+    private void goToRentActivity(){
+        Intent i = new Intent(this, RentActivity.class);
+        startActivity(i);
+    }
+
+    private void goToLetActivity(){
+        Intent i = new Intent(this, LetActivity.class);
+        startActivity(i);
     }
 }
 

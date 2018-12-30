@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity{
     private View mProgressView;
     private View mLoginFormView;
 
-    private SharedPreferences sp_login;
+    private SharedPreferences sp_login, sp_profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +68,11 @@ public class LoginActivity extends AppCompatActivity{
         setContentView(R.layout.activity_login);
 
         sp_login = getSharedPreferences("login", MODE_PRIVATE);
+        sp_profile = getSharedPreferences("profile", MODE_PRIVATE);
 
         if(sp_login.getBoolean("logged", false)) {
-            goToRentActivity();
-//            goToLetActivity();
+            finish();
+            goToMainActivity();
         }
 
         // Set up the login form.
@@ -236,7 +237,7 @@ public class LoginActivity extends AppCompatActivity{
         @Override
         protected String doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            String data = "Error";
+            String data = "An Error Occurred. Please Try Again.";
             JSONObject postData = new JSONObject();
             try{
                 postData.put("mobile", mNumber);
@@ -290,8 +291,7 @@ public class LoginActivity extends AppCompatActivity{
             switch (success) {
                 case "Login Successful.":
                     finish();
-//                    goToRentActivity();
-//                    goToLetActivity();
+                    goToMainActivity();
                     sp_login.edit().putBoolean("logged", true).apply();
                     break;
                 default:
@@ -308,6 +308,25 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
+    private void goToMainActivity(){
+        String result;
+        try {
+            result = new JsonTask(getString(R.string.url) + "profile").execute((Void) null).get();
+            if(!result.equals("Error"))
+                sp_profile.edit().putString("data",result).apply();
+            JSONObject json = new JSONObject(result);
+            if(json.getJSONObject("user").getInt("age") <= 35){
+                goToRentActivity();
+            }
+            else{
+                goToLetActivity();
+            }
+        }
+        catch (Exception e){
+
+        }
+    }
+
     private void goToRentActivity(){
         Intent i = new Intent(this, RentActivity.class);
         startActivity(i);
@@ -321,6 +340,52 @@ public class LoginActivity extends AppCompatActivity{
     private void goToRegisterActivity(){
         Intent i = new Intent(this, RegisterActivity.class);
         startActivity(i);
+    }
+
+    private class JsonTask extends AsyncTask<Void, Void, String> {
+
+        private final String profileUrl;
+
+        JsonTask(String s)
+        {
+            profileUrl = s;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+            String data = "Error";
+            try{
+                HttpURLConnection httpURLConnection = null;
+                try {
+                    httpURLConnection = (HttpURLConnection) new URL(profileUrl).openConnection();
+                    httpURLConnection.setRequestMethod("GET");
+                    httpURLConnection.addRequestProperty("cookie", sp_login.getString("token2", ""));
+                    httpURLConnection.addRequestProperty("cookie", sp_login.getString("token", ""));
+                    httpURLConnection.setDoOutput(false);
+                    httpURLConnection.setDoInput(true);
+                    String line;
+                    data = "";
+                    BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                    while ((line = br.readLine()) != null) {
+                        data += line;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    if (httpURLConnection != null) {
+                        httpURLConnection.disconnect();
+                    }
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return data;
+        }
     }
 }
 

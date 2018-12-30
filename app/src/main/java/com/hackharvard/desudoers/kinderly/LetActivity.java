@@ -51,4 +51,9 @@ public class LetActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        this.finishAffinity();
+    }
 }
