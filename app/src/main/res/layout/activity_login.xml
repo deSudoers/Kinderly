@@ -27,6 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="120dp"
         android:adjustViewBounds="true"
+        android:layout_marginEnd="5dp"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/title_green"
         android:layout_marginTop="80dp"/>
