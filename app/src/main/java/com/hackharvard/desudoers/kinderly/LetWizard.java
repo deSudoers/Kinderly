@@ -1,12 +1,20 @@
 package com.hackharvard.desudoers.kinderly;
 
 import android.app.ProgressDialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.media.Image;
+import android.net.Uri;
 import android.net.wifi.aware.WifiAwareSession;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,18 +25,23 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class LetWizard extends AppCompatActivity implements View.OnClickListener{
 
@@ -185,14 +198,54 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                         {
                             room = roomsData.getJSONObject(i+"");
                             room.put("property_id",id);
-                            new uploadPropertyData(getString(R.string.url)+"room",room.toString(),i).execute((Void)null);
+                            String x = new uploadPropertyData(getString(R.string.url)+"room",room.toString(),i).execute((Void)null).get();
+                        }
+                    }
+                    catch (JSONException e){
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
+//                    try {
+//                        int id = Integer.parseInt(new JSONObject(propId).getString("property_id"));
+//                        Log.e("ABC",id+"");
+//                        String roomStr = sp.getString("propRooms", null);
+//                        roomsData = new JSONObject(roomStr);
+//                        for (int i = 0; i < numOfRooms; i++)
+//                        {
+//                            room = roomsData.getJSONObject(i+"");
+//                            room.put("property_id",id);
+//                            String x = new uploadPropertyData(getString(R.string.url)+"property/"+id+"/image",room.toString(),i).execute((Void)null).get();
+//                        }
+//                    }
+//                    catch (JSONException e){
+//                        e.printStackTrace();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    } catch (ExecutionException e) {
+//                        e.printStackTrace();
+//                    }
+                JSONArray propPics = null;
+                    try {
+                        int id = Integer.parseInt(new JSONObject(propId).getString("property_id"));
+                        Log.e("ABC",id+"");
+                        String propPicsStr = sp.getString("propImages", null);
+                        propPics = new JSONArray(propPicsStr);
+                        String s = propPics.toString();
+                        Log.e("ABC_IMG","here"+s);
+                        for (int i = 0; i < propPics.length(); i++)
+                        {
+                            Uri img = Uri.parse(propPics.get(i).toString());
+                            new uploadPropertyPicture(img, getString(R.string.url)+"property/"+id+"/image").execute((Void)null);
                         }
                     }
                     catch (JSONException e){
                         e.printStackTrace();
                     }
                     getSupportFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    finish();
                     break;
         }
     }
@@ -302,4 +355,233 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         protected void onCancelled() {
         }
     }
+
+    private class uploadPropertyPicture extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mProfileUrl;
+        private final Uri mUri;
+        ProgressDialog pd;
+        uploadPropertyPicture(Uri uri, String profileUrl)
+        {
+            mProfileUrl = profileUrl;
+            mUri = uri;
+
+            // server/property/propid/image
+        }
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd = new ProgressDialog(LetWizard.this);
+            pd.setMessage("Uploading photo");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+            try{
+                HttpURLConnection httpURLConnection = null;
+                DataOutputStream dataOutputStream = null;
+
+                String twoHyphens = "--";
+                String boundary = "*****" + Long.toString(System.currentTimeMillis()) + "*****";
+                String lineEnd = "\r\n";
+                int bytesRead, bytesAvailable, bufferSize;
+                byte[] buffer;
+                int maxBufferSize = 1 * 1024 * 1024;
+                File sourceFile = new File(getPathFromUri(LetWizard.this, mUri));
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(sourceFile.getPath());
+                    httpURLConnection = (HttpURLConnection) new URL(mProfileUrl).openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                    httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
+                    SharedPreferences sp = getSharedPreferences("login",Context.MODE_PRIVATE);
+                    httpURLConnection.addRequestProperty("cookie", sp.getString("token2", ""));
+                    httpURLConnection.addRequestProperty("cookie", sp.getString("token", ""));
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+
+                    dataOutputStream = new DataOutputStream(httpURLConnection.getOutputStream());
+                    dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
+                    dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"" + "image" + "\"; filename=\"" + sourceFile.getName() + "\"" + lineEnd);
+                    dataOutputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
+
+                    dataOutputStream.writeBytes(lineEnd);
+
+                    bytesAvailable = fileInputStream.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    buffer = new byte[bufferSize];
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                    while (bytesRead > 0) {
+
+                        dataOutputStream.write(buffer, 0, bufferSize);
+                        bytesAvailable = fileInputStream.available();
+                        bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    }
+                    dataOutputStream.writeBytes(lineEnd);
+                    dataOutputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                    String data ="";
+                    String line;
+                    BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                    while ((line = br.readLine()) != null) {
+                        data += line;
+                    }
+                    Log.e("ABC_IMG", data);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ABC_IMG", e.toString());
+                    return false;
+                }
+                finally {
+                    if (httpURLConnection != null) {
+                        httpURLConnection.disconnect();
+                    }
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (pd.isShowing()){
+                pd.dismiss();
+            }
+            //onPostExecute(result);
+        }
+    }
+
+    public static String getPathFromUri(final Context context, final Uri uri) {
+
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+
+                // TODO handle non-primary volumes
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[] {
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+
+            // Return the remote address
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
+
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    public static String getDataColumn(Context context, Uri uri, String selection,
+                                       String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is Google Photos.
+     */
+    public static boolean isGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
 }
+
