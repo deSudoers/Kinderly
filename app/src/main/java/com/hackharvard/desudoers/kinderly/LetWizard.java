@@ -76,6 +76,12 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         sp.edit().putString("propImages",null).apply();
         sp.edit().putString("propId",null).apply();
         sp.edit().putInt("propPrice",0).apply();
+        sp.edit().putString("propBlockNo",null).apply();
+        sp.edit().putString("propBuilding",null).apply();
+        sp.edit().putString("propStreet",null).apply();
+        sp.edit().putString("propCity",null).apply();
+        sp.edit().putString("propState",null).apply();
+        sp.edit().putString("propType",null).apply();
 
         pageTitle = findViewById(R.id.pageTitle);
         pageTitle.setText(R.string.greetings);
@@ -118,6 +124,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         int page = getPage();
         switch (page){
             case 1: waddr.getData();
+                    pageNumber = checkNonEmptyData(1)?pageNumber:pageNumber-1;
                     break;
             case 3: numOfRooms = wrc.getNumberOfRooms();
                     sp.edit().putInt("numOfRooms",numOfRooms).apply();
@@ -145,6 +152,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         switch (page)
         {
             case 1: loadFragment(waddr);
+                    sp.getString("blockNo","");
                     break;
             case 2: loadFragment(wpics);
                     break;
@@ -233,6 +241,31 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
 //                    }
                     getSupportFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     break;
+        }
+    }
+
+    private boolean checkNonEmptyData(int option)
+    {
+        switch(option)
+        {
+            case 1:
+                String x[] = new String[6];
+                x[0] = sp.getString("propBlockNo",null);
+                x[1] = sp.getString("propBuilding",null);
+                x[2]= sp.getString("propStreet",null);
+                x[3] = sp.getString("propCity",null);
+                x[4] = sp.getString("propState",null);
+                x[5] = sp.getString("propType",null);
+                for(int i=0;i<5;i++)
+                {
+                    if(x[i]==null || x[i].equals(""))
+                        return false;
+                }
+                return true;
+
+            case 2: return false;
+
+            default:    return true;
         }
     }
 

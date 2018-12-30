@@ -46,16 +46,17 @@ public class WizAddress extends Fragment{
     {
         SharedPreferences sp;
         sp = getActivity().getSharedPreferences("letProperty",Context.MODE_PRIVATE);
-//        sp.edit().putString("blockNo",blockNo.getText().toString()).apply();
-//        sp.edit().putString("building",building.getText().toString()).apply();
+        sp.edit().putString("propBlockNo",blockNo.getText().toString()).apply();
+        sp.edit().putString("propBuilding",building.getText().toString()).apply();
         sp.edit().putString("propStreet",street.getText().toString()).apply();
         sp.edit().putString("propCity",city.getText().toString()).apply();
         sp.edit().putString("propState",state.getText().toString()).apply();
         String address = blockNo.getText().toString();
-        address += "," + building.getText().toString();
-        address += "," + street.getText().toString();
-        address += "," + city.getText().toString();
-        address += "," + state.getText().toString();
+        address += ", " + building.getText().toString();
+        address += ", " + street.getText().toString();
+        address += ", " + city.getText().toString();
+        address += ", " + state.getText().toString();
+        address += ", India";
 
         sp.edit().putString("propAddress",address).apply();
         if(apt.isChecked())
