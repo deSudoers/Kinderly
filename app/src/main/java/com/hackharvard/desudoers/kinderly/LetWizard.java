@@ -76,6 +76,12 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         sp.edit().putString("propImages",null).apply();
         sp.edit().putString("propId",null).apply();
         sp.edit().putInt("propPrice",0).apply();
+        sp.edit().putString("propBlockNo",null).apply();
+        sp.edit().putString("propBuilding",null).apply();
+        sp.edit().putString("propStreet",null).apply();
+        sp.edit().putString("propCity",null).apply();
+        sp.edit().putString("propState",null).apply();
+        sp.edit().putString("propType",null).apply();
 
         pageTitle = findViewById(R.id.pageTitle);
         pageTitle.setText(R.string.greetings);
@@ -118,6 +124,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         int page = getPage();
         switch (page){
             case 1: waddr.getData();
+                    pageNumber = checkNonEmptyData(1)?pageNumber:pageNumber-1;
                     break;
             case 3: numOfRooms = wrc.getNumberOfRooms();
                     sp.edit().putInt("numOfRooms",numOfRooms).apply();
@@ -142,10 +149,10 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
     private void useFragment() {
         int page = getPage();
         Button button = findViewById(R.id.nextButton);
-        button.setText(R.string.next);
         switch (page)
         {
             case 1: loadFragment(waddr);
+                    sp.getString("blockNo","");
                     break;
             case 2: loadFragment(wpics);
                     break;
@@ -159,7 +166,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                         pageNumber--;
                     break;
             case 6: loadFragment(wef);
-                    button.setText(R.string.finish);
+//                    button.setText(R.string.finish);
                     break;
             case 7: JSONObject property = null;
                     String data = null;
@@ -209,26 +216,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                         e.printStackTrace();
                     }
 
-//                    try {
-//                        int id = Integer.parseInt(new JSONObject(propId).getString("property_id"));
-//                        Log.e("ABC",id+"");
-//                        String roomStr = sp.getString("propRooms", null);
-//                        roomsData = new JSONObject(roomStr);
-//                        for (int i = 0; i < numOfRooms; i++)
-//                        {
-//                            room = roomsData.getJSONObject(i+"");
-//                            room.put("property_id",id);
-//                            String x = new uploadPropertyData(getString(R.string.url)+"property/"+id+"/image",room.toString(),i).execute((Void)null).get();
-//                        }
-//                    }
-//                    catch (JSONException e){
-//                        e.printStackTrace();
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    } catch (ExecutionException e) {
-//                        e.printStackTrace();
-//                    }
-                JSONArray propPics = null;
+                    JSONArray propPics = null;
                     try {
                         int id = Integer.parseInt(new JSONObject(propId).getString("property_id"));
                         Log.e("ABC",id+"");
@@ -239,14 +227,45 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                         for (int i = 0; i < propPics.length(); i++)
                         {
                             Uri img = Uri.parse(propPics.get(i).toString());
+//                            boolean b = new uploadPropertyPicture(img, getString(R.string.url)+"property/"+id+"/image").execute((Void)null).get();
                             new uploadPropertyPicture(img, getString(R.string.url)+"property/"+id+"/image").execute((Void)null);
                         }
                     }
                     catch (JSONException e){
                         e.printStackTrace();
                     }
+//                    catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    } catch (ExecutionException e) {
+//                        e.printStackTrace();
+//                    }
                     getSupportFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     break;
+        }
+    }
+
+    private boolean checkNonEmptyData(int option)
+    {
+        switch(option)
+        {
+            case 1:
+                String x[] = new String[6];
+                x[0] = sp.getString("propBlockNo",null);
+                x[1] = sp.getString("propBuilding",null);
+                x[2]= sp.getString("propStreet",null);
+                x[3] = sp.getString("propCity",null);
+                x[4] = sp.getString("propState",null);
+                x[5] = sp.getString("propType",null);
+                for(int i=0;i<5;i++)
+                {
+                    if(x[i]==null || x[i].equals(""))
+                        return false;
+                }
+                return true;
+
+            case 2: return false;
+
+            default:    return true;
         }
     }
 
@@ -365,15 +384,12 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
         {
             mProfileUrl = profileUrl;
             mUri = uri;
-
-            // server/property/propid/image
         }
 
         protected void onPreExecute() {
             super.onPreExecute();
-
             pd = new ProgressDialog(LetWizard.this);
-            pd.setMessage("Uploading photo");
+            pd.setMessage("Uploading photos");
             pd.setCancelable(false);
             pd.show();
         }
@@ -398,7 +414,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                     httpURLConnection.setRequestMethod("POST");
                     httpURLConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
                     httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
-                    SharedPreferences sp = getSharedPreferences("login",Context.MODE_PRIVATE);
+                    SharedPreferences sp = LetWizard.this.getSharedPreferences("login",Context.MODE_PRIVATE);
                     httpURLConnection.addRequestProperty("cookie", sp.getString("token2", ""));
                     httpURLConnection.addRequestProperty("cookie", sp.getString("token", ""));
                     httpURLConnection.setDoOutput(true);
