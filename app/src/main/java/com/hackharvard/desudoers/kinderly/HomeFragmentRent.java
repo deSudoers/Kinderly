@@ -142,6 +142,18 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
         queryHomes();
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        for(int i = 0; i < CardArrayAdapter.cardList.size(); ++i) {
+            try {
+                CardArrayAdapter.cardList.get(i).stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void showNoticeDialog() {
         // Create an instance of the dialog fragment and show it
         DialogFragment dialog = new SortDialogFragment();
@@ -242,7 +254,7 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
 //            dialog.show();
 //            return;
 //        }
-        String location = sp_filter.getString("location", "Surat");
+        String location = sp_filter.getString("location_name", "");
         float minValue = sp_filter.getFloat("minValue", 0.0f) * 1000;
         float maxValue = sp_filter.getFloat("maxValue", 99.99f) * 1000;
         int rooms = sp_filter.getInt("rooms", 1);
@@ -258,80 +270,81 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
         JSONObject jsonMsg = null;
         try {
             jsonMsg = new JSONObject(homes);
-            cardArrayAdapter.clear();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 0; ; i++) {
-
-            try {
-                JSONObject msg = jsonMsg.getJSONObject(String.valueOf(i));
-                String price = msg.getInt("price")+"";
-                String address = msg.getString("address");
-                String property_id = msg.getString("property_id");
-
-                JSONObject jsonMsgUrl = null;
+            CardArrayAdapter.cardList.clear();
+            cardArrayAdapter.notifyDataSetChanged();
+            for (int i = 0; ; i++) {
 
                 try {
-                    jsonMsgUrl = new JSONObject(msg.getString("images"));
-                }
-                catch (JSONException e){
-                    e.printStackTrace();
-                }
+                    JSONObject msg = jsonMsg.getJSONObject(String.valueOf(i));
+                    String price = msg.getInt("price")+"";
+                    String address = msg.getString("address");
+                    String property_id = msg.getString("property_id");
 
-                List<String> urls = new ArrayList<>();
-                for(int j = 0; ; j++){
+                    JSONObject jsonMsgUrl = null;
+
                     try {
-                        urls.add(jsonMsgUrl.getString(String.valueOf(j)));
+                        jsonMsgUrl = new JSONObject(msg.getString("images"));
                     }
                     catch (JSONException e){
                         e.printStackTrace();
-                        break;
                     }
-                }
+
+                    List<String> urls = new ArrayList<>();
+                    for(int j = 0; ; j++){
+                        try {
+                            urls.add(jsonMsgUrl.getString(String.valueOf(j)));
+                        }
+                        catch (JSONException e){
+                            e.printStackTrace();
+                            break;
+                        }
+                    }
 //                boolean favourite = msg.getBoolean("favourite");
-                boolean favourite = true;
-                Card card = null;
-                card = new Card(price, address, property_id, urls, favourite);
-                cardArrayAdapter.add(card);
-            } catch (Exception e) {
-                break;
+                    boolean favourite = true;
+                    Card card = null;
+                    card = new Card(price, address, property_id, urls, favourite);
+                    cardArrayAdapter.add(card);
+                    cardArrayAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    break;
+                }
             }
-        }
-        listView.setAdapter(cardArrayAdapter);
+            listView.setAdapter(cardArrayAdapter);
 
-        boolean flag = false;
-        linearLayout.removeAllViews();
-        if(sp_filter.getBoolean("location_bool", false)){
-            flag = true;
-            linearLayout.addView(view_location);
-            text_location.setText(sp_filter.getString("location_name", ""));
-        }
-        if(sp_filter.getBoolean("range_bool", false)){
-            flag = true;
-            linearLayout.addView(view_range);
-            text_range.setText(sp_filter.getFloat("minValue", 0.0f)+"k - "+ sp_filter.getFloat("maxValue", 99.99f) +"k");
-        }
-        if(sp_filter.getBoolean("rooms_bool", false)){
-            flag = true;
-            linearLayout.addView(view_rooms);
-            text_rooms.setText("Rooms: " + sp_filter.getInt("rooms", 1));
-        }
-        if(sp_filter.getBoolean("capacity_bool", false)){
-            flag = true;
-            linearLayout.addView(view_capacity);
-            text_capacity.setText("Capacity: " + sp_filter.getInt("capacity", 1));
-        }
-        if(sp_filter.getBoolean("attachedbathroom_bool", false)){
-            flag = true;
-            linearLayout.addView(view_attachedbathroom);
-            text_attachedbathroom.setText(sp_filter.getInt("attachedbathroom", 1) == 1 ? "Attached Bathroom" : "No Bathroom");
-        }
+            boolean flag = false;
+            linearLayout.removeAllViews();
+            if(sp_filter.getBoolean("location_bool", false)){
+                flag = true;
+                linearLayout.addView(view_location);
+                text_location.setText(sp_filter.getString("location_name", ""));
+            }
+            if(sp_filter.getBoolean("range_bool", false)){
+                flag = true;
+                linearLayout.addView(view_range);
+                text_range.setText(sp_filter.getFloat("minValue", 0.0f)+"k - "+ sp_filter.getFloat("maxValue", 99.99f) +"k");
+            }
+            if(sp_filter.getBoolean("rooms_bool", false)){
+                flag = true;
+                linearLayout.addView(view_rooms);
+                text_rooms.setText("Rooms: " + sp_filter.getInt("rooms", 1));
+            }
+            if(sp_filter.getBoolean("capacity_bool", false)){
+                flag = true;
+                linearLayout.addView(view_capacity);
+                text_capacity.setText("Capacity: " + sp_filter.getInt("capacity", 1));
+            }
+            if(sp_filter.getBoolean("attachedbathroom_bool", false)){
+                flag = true;
+                linearLayout.addView(view_attachedbathroom);
+                text_attachedbathroom.setText(sp_filter.getInt("attachedbathroom", 1) == 1 ? "Attached Bathroom" : "No Bathroom");
+            }
 
-        if(flag){
-            toolbar.setLayoutParams(new CollapsingToolbarLayout.LayoutParams(CollapsingToolbarLayout.LayoutParams.MATCH_PARENT, 430, Gravity.BOTTOM));
-            appBarLayout.setLayoutParams(new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, 730));
+            if(flag){
+                toolbar.setLayoutParams(new CollapsingToolbarLayout.LayoutParams(CollapsingToolbarLayout.LayoutParams.MATCH_PARENT, 430, Gravity.BOTTOM));
+                appBarLayout.setLayoutParams(new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, 730));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -361,12 +374,13 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
             String data = "";
             JSONObject postData = new JSONObject();
             try{
-                postData.put("address", "Surat");
-//                if(sp_filter.getBoolean("range_bool", false)) {
+                if(sp_filter.getBoolean("location_bool", false))
+                    postData.put("address", mLocation);
+                if(sp_filter.getBoolean("range_bool", false)) {
                     postData.put("min_price", mMinValue);
                     postData.put("max_price", mMaxValue);
-//                }
-//                if(sp_filter.getBoolean("rooms_bool", false))
+                }
+                if(sp_filter.getBoolean("rooms_bool", false))
                     postData.put("num_rooms", mRooms);
                 if(sp_filter.getBoolean("capacity_bool", false))
                     postData.put("capacity", mCapacity);
@@ -383,6 +397,7 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
                     httpURLConnection.setRequestProperty("Content-Type", "application/json");
                     httpURLConnection.setDoOutput(true);
                     httpURLConnection.setDoInput(true);
+                    Log.e("filter", postData.toString());
                     DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
                     wr.writeBytes(postData.toString());
                     wr.flush();

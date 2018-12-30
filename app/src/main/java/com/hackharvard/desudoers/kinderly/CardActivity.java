@@ -152,14 +152,6 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         property_id = card.getPropertyId();
 
-        for(int i = 0; i < CardArrayAdapter.cardList.size(); ++i) {
-            try {
-                CardArrayAdapter.cardList.get(i).stop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
         new QueryTask(getString(R.string.url)+"property/"+property_id).execute();
     }
 
