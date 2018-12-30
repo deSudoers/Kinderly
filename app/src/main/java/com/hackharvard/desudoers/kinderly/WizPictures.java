@@ -1,7 +1,9 @@
 package com.hackharvard.desudoers.kinderly;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -41,7 +43,7 @@ import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
-public class WizPictures extends Fragment implements View.OnClickListener{
+public class WizPictures extends Fragment{
     TextView pageTitle;
     GridView imageGrid;
     Button camera;
@@ -55,24 +57,53 @@ public class WizPictures extends Fragment implements View.OnClickListener{
         View view =  inflater.inflate(R.layout.fragment_wiz_pics, container, false);
         imageGrid = view.findViewById(R.id.image_grid);
         gridImageAdapter = new GridImageAdapter(getActivity());
+        gridImageAdapter.getImageURI(null);
         imageGrid.setAdapter(gridImageAdapter);
-        camera = view.findViewById(R.id.camera);
-        gallery = view.findViewById(R.id.gallery);
-        gallery.setOnClickListener(this);
-        camera.setOnClickListener(this);
         pageTitle = view.findViewById(R.id.pageTitle);
         viewAddedPictures();
 
-//        imageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> parent, View v,
-//                                    int position, long id) {
-//                Toast.makeText(getContext(), "" + position,
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        imageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            public void onItemClick(AdapterView<?> parent, View v,int position, long id)
+            {
+
+                if(position == gridImageAdapter.getCount()-1)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Add property pictures");
+                    builder.setMessage("Select images using");
+                    builder.setPositiveButton("Gallery", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent,"Select Picture"),1);
+                        }
+                    });
+                    builder.setNegativeButton("Camera", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, 0);
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                else
+                {
+                    gridImageAdapter.imgUri.remove(position);
+                    removeImageUri(position);
+                    renderGridView();
+                }
+            }
+        });
 
         return view;
     }
+
 
     public void viewAddedPictures() {
         SharedPreferences sp = getActivity().getSharedPreferences("letProperty",Context.MODE_PRIVATE);
@@ -95,39 +126,14 @@ public class WizPictures extends Fragment implements View.OnClickListener{
         }
     }
 
-    @Override
-    public void onClick(View view){
-        switch(view.getId())
-        {
-            case R.id.gallery:
-//                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(pickPhoto , 1);
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"),1);
-                break;
-
-            case R.id.camera:
-                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePicture, 0);
-        }
-    }
-
     public void renderGridView()
     {
         imageGrid.setAdapter(gridImageAdapter);
-        if(gridImageAdapter.getCount()>=1 && gridImageAdapter.getCount()<=3) {
-//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_out));
+        if(gridImageAdapter.getCount()>=1 && gridImageAdapter.getCount()<=4) {
             pageTitle.setText("A few more would be amazing!");
-//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_in));
         }
-        if(gridImageAdapter.getCount()>3) {
-//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_out));
+        if(gridImageAdapter.getCount()>4) {
             pageTitle.setText("Already looks great!");
-//            pageTitle.startAnimation(AnimationUtils.loadAnimation(getActivity(),android.R.anim.fade_in));
         }
     }
 
@@ -251,10 +257,30 @@ public class WizPictures extends Fragment implements View.OnClickListener{
             e.printStackTrace();
         }
     }
-}
 
-//                if(resultCode == RESULT_OK){
-//                    Uri selectedImage = imageReturnedIntent.getData();
-//                    gridImageAdapter.getImageURI(selectedImage);
-//                    renderGridView();
-//                }
+    private void removeImageUri(int position)
+    {
+        SharedPreferences sp = getActivity().getSharedPreferences("letProperty",Context.MODE_PRIVATE);
+        String strImages = sp.getString("propImages",null);
+        try {
+
+            if(strImages == null)
+            {
+                JSONArray images = new JSONArray();
+                images.remove(gridImageAdapter.getCount()-position-1);
+                Log.e("LOG_IMG",images.toString());
+                sp.edit().putString("propImages",images.toString()).apply();
+            }
+            else
+            {
+                JSONArray images = new JSONArray(strImages);
+                images.remove(gridImageAdapter.getCount()-position-1);
+                Log.e("LOG_IMG",images.toString());
+                sp.edit().putString("propImages",images.toString()).apply();
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+}

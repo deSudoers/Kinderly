@@ -30,7 +30,7 @@ public class GridImageAdapter extends BaseAdapter {
 
     public void getImageURI(Uri inputImage){
 
-        imgUri.add(inputImage);
+        imgUri.add(0,inputImage);
     }
 
     public int getCount() {
@@ -60,7 +60,11 @@ public class GridImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageURI(imgUri.get(position));
+        if (imgUri.size()-1 == position)
+            imageView.setImageResource(R.drawable.add);
+        else
+            imageView.setImageURI(imgUri.get(position));
+        Log.e("ABC","len: "+imgUri.size()+" pos: "+position);
         return imageView;
     }
 }
