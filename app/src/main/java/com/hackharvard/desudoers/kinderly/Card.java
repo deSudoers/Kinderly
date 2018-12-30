@@ -1,5 +1,6 @@
 package com.hackharvard.desudoers.kinderly;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -13,11 +14,11 @@ public class Card {
     private String price;
     private String address;
     private Bitmap[] images;
-    private String property_id;
+    private int property_id;
     private setBitmapImage set;
     private boolean favourite;
 
-    public Card(String price, String address, String property_id, List<String> urls, boolean favourite) {
+    public Card(String price, String address, int property_id, List<String> urls, boolean favourite, Context cxt) {
         this.price = price;
         this.address = address;
         this.property_id = property_id;
@@ -25,7 +26,7 @@ public class Card {
         for(int i = 0; i < urls.size(); ++i){
             this.images[i] = null;
             set = new setBitmapImage();
-            set.execute(urls.get(i), i+"");
+            set.execute(cxt.getString(R.string.url)+"static/images/"+this.property_id+"/"+urls.get(i), i+"");
         }
         this.favourite = favourite;
     }
@@ -38,7 +39,7 @@ public class Card {
 
     public Bitmap[] getImages() { return images; }
 
-    public String getPropertyId() { return property_id;}
+    public int getPropertyId() { return property_id;}
 
     public boolean isFavourite() {
         return favourite;
