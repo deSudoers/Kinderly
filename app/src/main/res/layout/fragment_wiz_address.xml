@@ -50,7 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/questrial"
-            android:text="@string/apt" />
+            android:text="@string/apt"
+            android:checked="true"/>
 
         <RadioButton
             android:id="@+id/bung"

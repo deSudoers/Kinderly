@@ -58,6 +58,26 @@ public class WizAddress extends Fragment{
         address += ", " + state.getText().toString();
         address += ", India";
 
+        if(state.getText().toString().isEmpty()){
+            state.setError(getString(R.string.error_field_required));
+            state.requestFocus();
+        }
+        if(city.getText().toString().isEmpty()){
+            city.setError(getString(R.string.error_field_required));
+            city.requestFocus();
+        }
+        if(street.getText().toString().isEmpty()){
+            street.setError(getString(R.string.error_field_required));
+            street.requestFocus();
+        }
+        if(building.getText().toString().isEmpty()){
+            building.setError(getString(R.string.error_field_required));
+            building.requestFocus();
+        }
+        if(blockNo.getText().toString().isEmpty()){
+            blockNo.setError(getString(R.string.error_field_required));
+            blockNo.requestFocus();
+        }
         sp.edit().putString("propAddress",address).apply();
         if(apt.isChecked())
             sp.edit().putString("propType","Apartment").apply();

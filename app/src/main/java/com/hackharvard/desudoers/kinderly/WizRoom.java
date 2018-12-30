@@ -56,6 +56,9 @@ public class WizRoom extends Fragment{
         boolean ab = checkOption(yes,no);
         boolean ac = checkOption(ac_yes,ac_no);
         boolean h = checkOption(h_yes,h_no);
+        if(capacity.getText().toString().isEmpty()){
+            capacity.setError(getString(R.string.error_field_required));
+        }
 
         JSONObject roomInfo = new JSONObject();
         try {
@@ -87,6 +90,7 @@ public class WizRoom extends Fragment{
                 e.printStackTrace();
             }
         }
+
 
         sp.edit().putString("propRooms", rooms.toString()).apply();
     }

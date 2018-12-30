@@ -71,7 +71,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/questrial"
             android:text="@string/yes"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:checked="true"/>
 
         <RadioButton
             android:id="@+id/no"
@@ -111,7 +112,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/questrial"
             android:text="@string/yes"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:checked="true"/>
 
         <RadioButton
             android:id="@+id/ac_no"
@@ -150,7 +152,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/questrial"
             android:textColor="@color/colorPrimary"
-            android:text="@string/yes" />
+            android:text="@string/yes"
+            android:checked="true"/>
 
         <RadioButton
             android:id="@+id/h_no"
