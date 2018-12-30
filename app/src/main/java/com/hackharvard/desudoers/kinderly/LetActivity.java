@@ -23,7 +23,7 @@ public class LetActivity extends AppCompatActivity {
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_responses:
-                    fragment = new ResponseFragmentLet();
+                    fragment = new HomeFragmentRent();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_profile:
