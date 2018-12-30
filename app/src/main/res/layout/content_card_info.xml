@@ -112,7 +112,7 @@
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="150dp"
         android:layout_marginTop="5dp"
         android:scrollbarAlwaysDrawHorizontalTrack="false"
         android:scrollbars="none"
@@ -236,12 +236,11 @@
 
     <ImageView
         android:id="@+id/rating"
-        android:layout_width="51dp"
-        android:layout_height="53dp"
+        android:layout_width="33dp"
+        android:layout_height="27dp"
         app:layout_constraintBottom_toBottomOf="@+id/price_card"
         app:layout_constraintEnd_toEndOf="@+id/address_card"
-        app:layout_constraintTop_toTopOf="@+id/address_card"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toTopOf="@+id/price_card"
         card_view:srcCompat="@drawable/star_grey" />
 
     <!--</android.support.constraint.ConstraintLayout>-->

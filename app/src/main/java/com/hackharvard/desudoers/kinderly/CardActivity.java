@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -80,9 +79,19 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
 
+        boolean done = false;
         for(Bitmap bitmap: card.getImages()){
+            done = true;
             ImageView imageView = new ImageView(this);
             imageView.setImageBitmap(bitmap);
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(1200, LinearLayout.LayoutParams.MATCH_PARENT));
+            linearLayout.addView(imageView);
+        }
+        if(!done){
+            ImageView imageView = new ImageView(this);
+            imageView.setImageResource(R.drawable.default_property);
             imageView.setAdjustViewBounds(true);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setLayoutParams(new LinearLayout.LayoutParams(1200, LinearLayout.LayoutParams.MATCH_PARENT));
@@ -102,7 +111,7 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         rating = (ImageView) findViewById(R.id.rating);
-        rating.setImageDrawable(getDrawable(card.isFavourite() ? R.drawable.star_brown : R.drawable.star_grey));
+        rating.setImageDrawable(getDrawable(card.isFavourite() ? R.drawable.star_brown : R.drawable.star_brown_border));
         rating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +120,7 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
                 try {
                     if (setFavourite.execute().get()) {
                         card.setFavourite(!set);
-                        rating.setImageDrawable(getDrawable(set ? R.drawable.star_grey : R.drawable.star_brown));
+                        rating.setImageDrawable(getDrawable(set ? R.drawable.star_brown_border : R.drawable.star_brown));
                     }
                 }
                 catch (Exception e){
@@ -156,7 +165,6 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void update(String change){
-        Log.e("cardact", change);
         try{
             JSONObject json = new JSONObject(change);
             address = json.getString("address");
@@ -169,6 +177,7 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
                     int capacity = jsonRoom.getInt("capacity");
                     boolean attachedbathroom = jsonRoom.getBoolean("has_attach_bath");
                     boolean ac = jsonRoom.getBoolean("has_ac");
+                    boolean heater = jsonRoom.getBoolean("has_heater");
                     View view = getLayoutInflater().inflate(R.layout.list_item_room, null);
                     TextView tv = (TextView) view.findViewById(R.id.price_line);
                     tv.setText("Capacity: "+capacity);
@@ -176,6 +185,8 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
                     iv2.setImageDrawable(getDrawable(attachedbathroom ? R.drawable.tick : R.drawable.cross));
                     ImageView iv3 = (ImageView) view.findViewById(R.id.line3_image);
                     iv3.setImageDrawable(getDrawable(ac ? R.drawable.tick : R.drawable.cross));
+                    ImageView iv4 = (ImageView) view.findViewById(R.id.line4_image);
+                    iv4.setImageDrawable(getDrawable(heater ? R.drawable.tick : R.drawable.cross));
                     TextView tv2 = (TextView) view.findViewById(R.id.room_id);
                     tv2.setText("#Room " + (i+1));
                     linearLayoutRoom.addView(view);
@@ -202,13 +213,6 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         ((CoordinatorLayout)progressBar.getParent()).removeView(progressBar);
         fab.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onBackPressed(){
-        super.onBackPressed();
-        Intent i = new Intent(this, RentActivity.class);
-        startActivity(i);
     }
 
     @Override
@@ -258,7 +262,6 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
                     while ((line = br.readLine()) != null) {
                         data += line;
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

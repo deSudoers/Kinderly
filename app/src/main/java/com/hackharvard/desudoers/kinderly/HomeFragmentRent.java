@@ -114,7 +114,7 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getActivity().finish();
+//                getActivity().finish();
                 Intent i = new Intent(getContext(), CardActivity.class);
                 i.putExtra("id", position);
                 startActivity(i);
@@ -152,6 +152,12 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        queryHomes();
     }
 
     private void showNoticeDialog() {
@@ -270,7 +276,7 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
         JSONObject jsonMsg = null;
         try {
             jsonMsg = new JSONObject(homes);
-            CardArrayAdapter.cardList.clear();
+            CardArrayAdapter.cardList = new ArrayList<Card>();
             cardArrayAdapter.notifyDataSetChanged();
             List<Integer> favourites = new ArrayList<>();
             JSONObject favourite =  jsonMsg.getJSONObject("favourites");
@@ -292,6 +298,8 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
                     String price = msg.getInt("price")+"";
                     String address = msg.getString("address");
                     int property_id = msg.getInt("property_id");
+                    String type = msg.getString("type");
+                    int num_rooms = msg.getInt("num_rooms");
 
                     JSONObject jsonMsgUrl = null;
 
@@ -319,7 +327,7 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
                             break;
                         }
                     }
-                    Card card = new Card(price, address, property_id, urls, isFavourite, getContext());
+                    Card card = new Card(price, address, property_id, urls, isFavourite, num_rooms, type, getContext());
                     cardArrayAdapter.add(card);
                     cardArrayAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
@@ -402,7 +410,7 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
                 if(sp_filter.getBoolean("capacity_bool", false))
                     postData.put("capacity", mCapacity);
                 if(sp_filter.getBoolean("attachedbathroom_bool", false))
-                    postData.put("attachedbathroom", mAttachedBathroom);
+                    postData.put("attach_bath", mAttachedBathroom);
 
                 Log.e("homes", postData.toString());
                 HttpURLConnection httpURLConnection = null;
@@ -414,7 +422,6 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
                     httpURLConnection.setRequestProperty("Content-Type", "application/json");
                     httpURLConnection.setDoOutput(true);
                     httpURLConnection.setDoInput(true);
-                    Log.e("filter", postData.toString());
                     DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
                     wr.writeBytes(postData.toString());
                     wr.flush();

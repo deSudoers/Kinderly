@@ -17,8 +17,10 @@ public class Card {
     private int property_id;
     private setBitmapImage set;
     private boolean favourite;
+    private int num_rooms;
+    private String type;
 
-    public Card(String price, String address, int property_id, List<String> urls, boolean favourite, Context cxt) {
+    public Card(String price, String address, int property_id, List<String> urls, boolean favourite, int num_rooms, String type, Context cxt) {
         this.price = price;
         this.address = address;
         this.property_id = property_id;
@@ -28,7 +30,9 @@ public class Card {
             set = new setBitmapImage();
             set.execute(cxt.getString(R.string.url)+"static/images/"+this.property_id+"/"+urls.get(i), i+"");
         }
+        this.num_rooms = num_rooms;
         this.favourite = favourite;
+        this.type = type;
     }
 
     public String getPrice() { return price; }
@@ -44,6 +48,10 @@ public class Card {
     public boolean isFavourite() {
         return favourite;
     }
+
+    public int getNumRooms() { return num_rooms; }
+
+    public String getType() { return type; }
 
     public void setFavourite(boolean fav) { favourite = fav; }
 

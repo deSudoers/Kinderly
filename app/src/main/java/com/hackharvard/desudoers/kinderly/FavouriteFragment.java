@@ -58,7 +58,7 @@ public class FavouriteFragment extends Fragment {
         JSONObject jsonMsg = null;
         try {
             jsonMsg = new JSONObject(homes);
-            CardArrayAdapter.cardList.clear();
+            CardArrayAdapter.cardList = new ArrayList<>();
             cardArrayAdapter.notifyDataSetChanged();
             for (int i = 0; ; i++) {
 
@@ -67,6 +67,8 @@ public class FavouriteFragment extends Fragment {
                     String price = (int)msg.getDouble("price")+"";
                     String address = msg.getString("address");
                     int property_id = msg.getInt("property_id");
+                    String type  = msg.getString("type");
+                    int num_rooms = msg.getInt("num_rooms");
 
                     JSONObject jsonMsgUrl = null;
 
@@ -87,7 +89,7 @@ public class FavouriteFragment extends Fragment {
                             break;
                         }
                     }
-                    Card card = new Card(price, address, property_id, urls, true, getContext());
+                    Card card = new Card(price, address, property_id, urls, true, num_rooms, type, getContext());
                     cardArrayAdapter.add(card);
                     cardArrayAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
@@ -102,7 +104,7 @@ public class FavouriteFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getActivity().finish();
+//                getActivity().finish();
                 Intent i = new Intent(getContext(), CardActivity.class);
                 i.putExtra("id", position);
                 startActivity(i);
@@ -143,7 +145,6 @@ public class FavouriteFragment extends Fragment {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("favourites", e.toString());
                 }
                 finally {
                     if (httpURLConnection != null) {

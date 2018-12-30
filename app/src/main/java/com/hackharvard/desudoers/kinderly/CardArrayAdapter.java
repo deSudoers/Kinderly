@@ -3,15 +3,11 @@ package com.hackharvard.desudoers.kinderly;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -21,7 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class CardArrayAdapter  extends ArrayAdapter<Card> {
     private static final String TAG = "CardArrayAdapter";
@@ -30,6 +25,7 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
     static class CardViewHolder {
         TextView line1;
         TextView line2;
+        TextView line3;
         ImageView image;
         ImageView rating;
     }
@@ -66,6 +62,7 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
             viewHolder = new CardViewHolder();
             viewHolder.line1 = (TextView) row.findViewById(R.id.price_line);
             viewHolder.line2 = (TextView) row.findViewById(R.id.address_line);
+            viewHolder.line3 = (TextView) row.findViewById(R.id.type_line);
             viewHolder.image = (ImageView) row.findViewById(R.id.view_pager);
             viewHolder.rating = (ImageView) row.findViewById(R.id.rating);
             row.setTag(viewHolder);
@@ -76,8 +73,7 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
 
         viewHolder.line1.setText("₹ "+card.getPrice());
         viewHolder.line2.setText(card.getAddress());
-//        ImageAdapter adapter = new ImageAdapter(getContext(), card.getImages());
-//        viewHolder.image.setAdapter(adapter);
+        viewHolder.line3.setText(card.getNumRooms()+" Rooms • "+card.getType());
         try {
             viewHolder.image.setImageBitmap(card.getImages()[0]);
         }
@@ -138,7 +134,6 @@ class SetFavourite extends AsyncTask<Void, Void, Boolean> {
                 httpURLConnection.setRequestProperty("Content-Type", "application/json");
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
-                Log.e("favourite", postData.toString());
                 DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
                 wr.writeBytes(postData.toString());
                 wr.flush();
@@ -151,7 +146,6 @@ class SetFavourite extends AsyncTask<Void, Void, Boolean> {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e("favourite", e.toString());
             }
             finally {
                 if (httpURLConnection != null) {
