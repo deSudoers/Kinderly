@@ -1,5 +1,6 @@
 package com.hackharvard.desudoers.kinderly;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.JsonReader;
 import android.util.Log;
@@ -69,6 +71,12 @@ public class WizPictures extends Fragment{
 
                 if(position == gridImageAdapter.getCount()-1)
                 {
+                    if ((ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED))
+                    {
+                        requestPermissions(new String[]{
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        }, 11);
+                    }
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("Add property pictures");
                     builder.setMessage("Select images using");
@@ -140,6 +148,20 @@ public class WizPictures extends Fragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        if ((ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED))
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Alert");
+            builder.setMessage("Cannot update image without access photos, media and files on your device.");
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
         switch(requestCode) {
             case 0:
                 if (resultCode == RESULT_OK) {
