@@ -66,6 +66,7 @@
     <string name="apply">Apply</string>
     <string name="change_location">Change Location</string>
     <string name="localities">Localities</string>
+    <string name="wizpics_text">Add property images to reach out more.\n\nClick + to add images and click on the image to remove them.</string>
     <string name="search_by_location">Search by Localities</string>
     <string name="rent">Rent</string>
     <string name="rooms">Rooms</string>
