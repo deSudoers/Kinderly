@@ -78,7 +78,12 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
         viewHolder.line2.setText(card.getAddress());
 //        ImageAdapter adapter = new ImageAdapter(getContext(), card.getImages());
 //        viewHolder.image.setAdapter(adapter);
-        viewHolder.image.setImageBitmap(card.getImages()[0]);
+        try {
+            viewHolder.image.setImageBitmap(card.getImages()[0]);
+        }
+        catch (Exception e){
+            viewHolder.image.setImageResource(R.drawable.default_property);
+        }
         viewHolder.rating.setImageDrawable(getContext().getDrawable(card.isFavourite() ? R.drawable.star_brown : R.drawable.star_grey));
 
         viewHolder.rating.setOnClickListener(new View.OnClickListener() {
@@ -104,12 +109,12 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
 
 class SetFavourite extends AsyncTask<Void, Void, Boolean> {
 
-    private final String mPropertyId;
+    private final int mPropertyId;
     private final boolean mFavourite;
     private final String mUrl;
     private SharedPreferences sp_login;
 
-    SetFavourite(boolean favourite, String propertyId, String url, Context cxt) {
+    SetFavourite(boolean favourite, int propertyId, String url, Context cxt) {
         mFavourite = favourite;
         mPropertyId = propertyId;
         mUrl = url;
@@ -122,17 +127,22 @@ class SetFavourite extends AsyncTask<Void, Void, Boolean> {
         boolean result = false;
         JSONObject postData = new JSONObject();
         try{
-            postData.put("property_id", mPropertyId);
+            postData.put("property_id", mPropertyId+"");
             postData.put("favourite", mFavourite);
             HttpURLConnection httpURLConnection = null;
             try {
                 httpURLConnection = (HttpURLConnection) new URL(mUrl).openConnection();
                 httpURLConnection.addRequestProperty("cookie", sp_login.getString("token2", ""));
                 httpURLConnection.addRequestProperty("cookie", sp_login.getString("token", ""));
-                httpURLConnection.setRequestMethod("PUT");
+                httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setRequestProperty("Content-Type", "application/json");
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
+                Log.e("favourite", postData.toString());
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(postData.toString());
+                wr.flush();
+                wr.close();
 
                 int response = httpURLConnection.getResponseCode();
                 if(response == HttpURLConnection.HTTP_OK){

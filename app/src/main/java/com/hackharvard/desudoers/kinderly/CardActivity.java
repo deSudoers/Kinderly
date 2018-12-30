@@ -57,7 +57,7 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ImageView contact_call;
     private ImageView contact_msg;
 
-    private String property_id;
+    private int property_id;
 
     private SharedPreferences sp_login;
 

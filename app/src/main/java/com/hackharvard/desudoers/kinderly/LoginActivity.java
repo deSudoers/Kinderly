@@ -71,7 +71,6 @@ public class LoginActivity extends AppCompatActivity{
         sp_profile = getSharedPreferences("profile", MODE_PRIVATE);
 
         if(sp_login.getBoolean("logged", false)) {
-            finish();
             goToMainActivity();
         }
 
@@ -110,6 +109,11 @@ public class LoginActivity extends AppCompatActivity{
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        this.finishAffinity();
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -290,9 +294,7 @@ public class LoginActivity extends AppCompatActivity{
             Log.e("login", success);
             switch (success) {
                 case "Login Successful.":
-                    finish();
                     goToMainActivity();
-                    sp_login.edit().putBoolean("logged", true).apply();
                     break;
                 default:
                     Snackbar.make(getWindow().getDecorView().getRootView(), success, Snackbar.LENGTH_LONG)
@@ -312,14 +314,16 @@ public class LoginActivity extends AppCompatActivity{
         String result;
         try {
             result = new JsonTask(getString(R.string.url) + "profile").execute((Void) null).get();
-            if(!result.equals("Error"))
+            if(!result.equals("Error")){
                 sp_profile.edit().putString("data",result).apply();
-            JSONObject json = new JSONObject(result);
-            if(json.getJSONObject("user").getInt("age") <= 35){
-                goToRentActivity();
-            }
-            else{
-                goToLetActivity();
+                JSONObject json = new JSONObject(result);
+                sp_login.edit().putBoolean("logged", true).apply();
+                finish();
+                if (json.getJSONObject("user").getInt("age") <= 35) {
+                    goToRentActivity();
+                } else {
+                    goToLetActivity();
+                }
             }
         }
         catch (Exception e){
