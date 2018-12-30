@@ -114,6 +114,10 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
             case R.id.prevButton:
                 if(pageNumber==0)
                     super.finish();
+                if(pageNumber==6) {
+                    Button button = findViewById(R.id.nextButton);
+                    button.setBackgroundResource(R.drawable.next);
+                }
                 pageNumber--;
                 getSupportFragmentManager().popBackStackImmediate();
                 break;
@@ -162,11 +166,12 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                     break;
             case 5: if(numOfRooms>0)
                         loadFragment(wp);
+
                     else
                         pageNumber--;
                     break;
             case 6: loadFragment(wef);
-//                    button.setText(R.string.finish);
+                    button.setBackgroundResource(R.drawable.ic_done);
                     break;
             case 7: JSONObject property = null;
                     String data = null;
@@ -473,7 +478,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
             if (pd.isShowing()){
                 pd.dismiss();
             }
-            //onPostExecute(result);
+            onBackPressed();
         }
     }
 
