@@ -45,7 +45,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LetActivity"
-            android:label="@string/title_activity_let" />
+            android:label="@string/title_activity_let"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CardActivity"
             android:label=""

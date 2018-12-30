@@ -11,6 +11,7 @@
     <string name="action_sign_up">Sign up</string>
     <string name="action_filter">FILTER</string>
     <string name="action_sort">SORT</string>
+    <string name="action_logout">LOGOUT</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_invalid_number">This number is invalid</string>

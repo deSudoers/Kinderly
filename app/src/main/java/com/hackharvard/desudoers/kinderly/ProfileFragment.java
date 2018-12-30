@@ -58,6 +58,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     ImageView proPic;
     TextView first_name,second_name,age,mobileNum;
     ProgressDialog pd;
+    SharedPreferences sp_login, sp_filter, sp_profile, sp_let_property;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstancestate) {
@@ -90,6 +91,35 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        sp_login = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        sp_filter = getContext().getSharedPreferences("filter", Context.MODE_PRIVATE);
+        sp_profile = getContext().getSharedPreferences("profile", Context.MODE_PRIVATE);
+        sp_let_property = getContext().getSharedPreferences("letProperty", Context.MODE_PRIVATE);
+
+        Button logout = (Button) getView().findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToLoginActivity();
+            }
+        });
+    }
+
+    private void goToLoginActivity(){
+        String cookie1 = sp_login.getString("token2","");
+        String cookie2 = sp_login.getString("token","");
+        sp_login.edit().clear().apply();
+        sp_filter.edit().clear().apply();
+        sp_profile.edit().clear().apply();
+        sp_let_property.edit().clear().apply();
+        new SendRequest( cookie1, cookie2, getString(R.string.url)+"logout").execute();
+
+        Intent i = new Intent(getContext(), LoginActivity.class);
+        startActivity(i);
+    }
+
     public void updateProfileInfo(String details)
     {
         String firstName = null,secondName=null;
@@ -108,7 +138,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         finally {
             first_name.setText(firstName);
             second_name.setText(secondName);
-            mobileNum.setText(userMobile);
+            mobileNum.setText("+91 "+userMobile);
             age.setText("Age: "+userAge);
         }
     }
@@ -154,7 +184,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 AlertDialog dialog = builder.create();
                 dialog.show();
         }
-
     }
 
 
@@ -237,6 +266,51 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         new UploadProfilePic(selectedImage, getString(R.string.url)+"profile").execute((Void)null);
     }
 
+    public class SendRequest extends AsyncTask<Void, Void, Void> {
+
+        private final String mToken1;
+        private final String mToken2;
+        private String mUrl;
+
+        SendRequest(String token1, String token2, String url) {
+            mToken1 = token1;
+            mToken2 = token2;
+            mUrl = url;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+            JSONObject postData = new JSONObject();
+            try{
+                HttpURLConnection httpURLConnection = null;
+                try {
+                    httpURLConnection = (HttpURLConnection) new URL(mUrl).openConnection();
+                    httpURLConnection.addRequestProperty("cookie", mToken1);
+                    httpURLConnection.addRequestProperty("cookie", mToken2);
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setRequestProperty("Content-Type", "application/json");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                    wr.writeBytes(postData.toString());
+                    wr.flush();
+                    wr.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    if (httpURLConnection != null) {
+                        httpURLConnection.disconnect();
+                    }
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
     private class JsonTask extends AsyncTask<Void, Void, String> {
 
