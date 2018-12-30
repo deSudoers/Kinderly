@@ -62,11 +62,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstancestate) {
         View view =  inflater.inflate(R.layout.fragment_profile,container,false);
-        changePicGallery = view.findViewById(R.id.change_pro_pic_gallery);
-        changePicCamera = view.findViewById(R.id.change_pro_pic_camera);
+//        changePicGallery = view.findViewById(R.id.change_pro_pic_gallery);
+//        changePicCamera = view.findViewById(R.id.change_pro_pic_camera);
         proPic = view.findViewById(R.id.profile_photo);
-        changePicGallery.setOnClickListener(this);
-        changePicCamera.setOnClickListener(this);
+//        changePicGallery.setOnClickListener(this);
+//        changePicCamera.setOnClickListener(this);
         proPic.setOnClickListener(this);
         first_name = view.findViewById(R.id.first_name);
         second_name = view.findViewById(R.id.second_name);
@@ -109,7 +109,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             first_name.setText(firstName);
             second_name.setText(secondName);
             mobileNum.setText(userMobile);
-            age.setText("Age #"+userAge);
+            age.setText("Age: "+userAge);
         }
     }
 
@@ -125,12 +125,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
         switch(view.getId())
         {
-            case R.id.change_pro_pic_gallery:
-
-                break;
-
-            case R.id.change_pro_pic_camera:
-                break;
+//            case R.id.change_pro_pic_gallery:
+//
+//                break;
+//
+//            case R.id.change_pro_pic_camera:
+//                break;
 
             case R.id.profile_photo:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
