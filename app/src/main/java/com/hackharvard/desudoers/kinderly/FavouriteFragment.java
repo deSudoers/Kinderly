@@ -49,7 +49,7 @@ public class FavouriteFragment extends Fragment {
         listView.setDivider(null);
         cardArrayAdapter = new CardArrayAdapter(getContext(), R.layout.list_item_card);
 
-        new QueryTask(getString(R.string.url)+"favourites").execute();
+        new QueryTask(getString(R.string.url)+"favourite").execute();
     }
 
     private void updateCards(String homes){
@@ -58,46 +58,44 @@ public class FavouriteFragment extends Fragment {
         JSONObject jsonMsg = null;
         try {
             jsonMsg = new JSONObject(homes);
-            cardArrayAdapter.clear();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 0; ; i++) {
-
-            try {
-                JSONObject msg = jsonMsg.getJSONObject(String.valueOf(i));
-                String price = "₹ " + msg.getInt("price");
-                String address = msg.getString("address");
-                String property_id = msg.getString("property_id");
-
-                JSONObject jsonMsgUrl = null;
+            CardArrayAdapter.cardList.clear();
+            cardArrayAdapter.notifyDataSetChanged();
+            for (int i = 0; ; i++) {
 
                 try {
-                    jsonMsgUrl = new JSONObject(msg.getString("images"));
-                }
-                catch (JSONException e){
-                    e.printStackTrace();
-                }
+                    JSONObject msg = jsonMsg.getJSONObject(String.valueOf(i));
+                    String price = (int)msg.getDouble("price")+"";
+                    String address = msg.getString("address");
+                    int property_id = msg.getInt("property_id");
 
-                List<String> urls = new ArrayList<>();
-                for(int j = 0; ; j++){
+                    JSONObject jsonMsgUrl = null;
+
                     try {
-                        urls.add(jsonMsgUrl.getString(String.valueOf(j)));
+                        jsonMsgUrl = new JSONObject(msg.getString("images"));
                     }
                     catch (JSONException e){
                         e.printStackTrace();
-                        break;
                     }
+
+                    List<String> urls = new ArrayList<>();
+                    for(int j = 0; ; j++){
+                        try {
+                            urls.add(jsonMsgUrl.getString(String.valueOf(j)));
+                        }
+                        catch (JSONException e){
+                            e.printStackTrace();
+                            break;
+                        }
+                    }
+                    Card card = new Card(price, address, property_id, urls, true, getContext());
+                    cardArrayAdapter.add(card);
+                    cardArrayAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    break;
                 }
-//                boolean favourite = msg.getBoolean("favourite");
-                boolean favourite = true;
-                Card card = null;
-                card = new Card(price, address, property_id, urls, favourite);
-                cardArrayAdapter.add(card);
-            } catch (Exception e) {
-                break;
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         listView.setAdapter(cardArrayAdapter);
 

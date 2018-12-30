@@ -272,13 +272,26 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
             jsonMsg = new JSONObject(homes);
             CardArrayAdapter.cardList.clear();
             cardArrayAdapter.notifyDataSetChanged();
+            List<Integer> favourites = new ArrayList<>();
+            JSONObject favourite =  jsonMsg.getJSONObject("favourites");
+
+            for (int i = 0; ; i++) {
+                try {
+                    favourites.add(favourite.getInt(String.valueOf(i)));
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                    break;
+                }
+            }
+
             for (int i = 0; ; i++) {
 
                 try {
                     JSONObject msg = jsonMsg.getJSONObject(String.valueOf(i));
                     String price = msg.getInt("price")+"";
                     String address = msg.getString("address");
-                    String property_id = msg.getString("property_id");
+                    int property_id = msg.getInt("property_id");
 
                     JSONObject jsonMsgUrl = null;
 
@@ -299,10 +312,14 @@ public class HomeFragmentRent extends Fragment implements SortDialogFragment.Sor
                             break;
                         }
                     }
-//                boolean favourite = msg.getBoolean("favourite");
-                    boolean favourite = true;
-                    Card card = null;
-                    card = new Card(price, address, property_id, urls, favourite);
+                    boolean isFavourite = false;
+                    for(int j : favourites){
+                        if(property_id == j){
+                            isFavourite = true;
+                            break;
+                        }
+                    }
+                    Card card = new Card(price, address, property_id, urls, isFavourite, getContext());
                     cardArrayAdapter.add(card);
                     cardArrayAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
