@@ -39,6 +39,8 @@
                     android:id="@+id/firstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:hint="@string/prompt_first_name"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
@@ -54,6 +56,8 @@
                     android:id="@+id/lastname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:hint="@string/prompt_last_name"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
@@ -65,15 +69,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <AutoCompleteTextView
-                android:id="@+id/age"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/prompt_age"
-                android:inputType="number"
-                android:maxLength="3"
-                android:maxLines="1"
-                android:singleLine="true" />
+                <AutoCompleteTextView
+                    android:id="@+id/age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="@string/prompt_age"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -82,15 +88,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <AutoCompleteTextView
-                    android:id="@+id/number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_number"
-                    android:inputType="number"
-                    android:maxLength="10"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+        <AutoCompleteTextView
+            android:id="@+id/number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/prompt_number"
+            android:inputType="number"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -102,6 +110,8 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:hint="@string/prompt_password"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
@@ -114,11 +124,16 @@
 
             <Button
                 android:id="@+id/sign_up_button"
-                style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/questrial"
                 android:text="@string/action_sign_up"
+                android:textColor="@color/colorSecondary"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
         </LinearLayout>

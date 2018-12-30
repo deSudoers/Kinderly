@@ -281,7 +281,7 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            String data = "";
+            String data = "An Error Occurred. Please Try Again.";
             JSONObject postData = new JSONObject();
             try{
                 postData.put("first_name", mFirstName);
