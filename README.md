@@ -1,5 +1,7 @@
 # Kinderly
-### Technologies for the elderly</div>
+<img src="https://i.ibb.co/pRrG98X/rect-kinderly.png" alt="kinderly" border="0" height="60%" width="60%">
+
+### Technologies for the elderly
 ##### Platform to connect the elders in society with the youth for HackHarvard Global 2018-19.
 
 
@@ -23,7 +25,7 @@ guests in the houses of elderly.
   - #### Elderly (rent rooms) mode
     - In this mode the user is prompted with a wizard where he can add all the  information about his property
 
-  - #### Youth (rent rooms) mode
+  - #### Youth (let rooms) mode
     - In this mode users can browse through all the available rooms for rent
     - User can shortlist properties
     - User can directly contact the respective owners of a particular property
