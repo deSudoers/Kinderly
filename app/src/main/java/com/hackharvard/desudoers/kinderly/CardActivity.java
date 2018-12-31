@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,9 +30,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CardActivity extends AppCompatActivity implements OnMapReadyCallback {
     private Context cxt;
@@ -60,6 +65,7 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private SharedPreferences sp_login;
 
+    private List<SetBitmapImage> set;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,25 +84,6 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
         card = CardArrayAdapter.getCard(index);
 
         linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
-
-        boolean done = false;
-        for(Bitmap bitmap: card.getImages()){
-            done = true;
-            ImageView imageView = new ImageView(this);
-            imageView.setImageBitmap(bitmap);
-            imageView.setAdjustViewBounds(true);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(1200, LinearLayout.LayoutParams.MATCH_PARENT));
-            linearLayout.addView(imageView);
-        }
-        if(!done){
-            ImageView imageView = new ImageView(this);
-            imageView.setImageResource(R.drawable.default_property);
-            imageView.setAdjustViewBounds(true);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(1200, LinearLayout.LayoutParams.MATCH_PARENT));
-            linearLayout.addView(imageView);
-        }
 
         sp_login = getSharedPreferences("login", MODE_PRIVATE);
 
@@ -164,12 +151,44 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
         new QueryTask(getString(R.string.url)+"property/"+property_id).execute();
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        for(int i = 0; i < set.size(); ++i){
+            set.get(i).cancel(true);
+        }
+    }
+
     public void update(String change){
         try{
             JSONObject json = new JSONObject(change);
             address = json.getString("address");
             address_view.setText(address);
             price_view.setText("₹  "+json.getInt("price"));
+            JSONObject jsonUrls = json.getJSONObject("images");
+            boolean done = false;
+            set = new ArrayList<>();
+            for(int i = 0;;i++){
+                try {
+                    SetBitmapImage setBitmapImage = new SetBitmapImage(i);
+                    String url = cxt.getString(R.string.url)+"static/images/"+property_id+"/"+jsonUrls.getString(String.valueOf(i));
+                    set.add(setBitmapImage);
+                    setBitmapImage.execute(url);
+                    done = true;
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                    break;
+                }
+            }
+            if(!done){
+                ImageView imageView = new ImageView(this);
+                imageView.setImageResource(R.drawable.default_property);
+                imageView.setAdjustViewBounds(true);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(1200, LinearLayout.LayoutParams.MATCH_PARENT));
+                linearLayout.addView(imageView);
+            }
             JSONObject jsonRooms = new JSONObject(json.getString("rooms"));;
             try{
                 for(int i = 0;;i++){
@@ -222,13 +241,6 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng myLocation = new LatLng(latitude, longitude);
         locationMarker = mMap.addMarker(new MarkerOptions().position(myLocation));
-        if(myLocation.longitude == 0 && myLocation.latitude == 0)
-        {
-
-        }
-        else {
-
-        }
 
         locationMarker.showInfoWindow();
 
@@ -286,6 +298,46 @@ public class CardActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onCancelled() {
 
+        }
+    }
+
+    class SetBitmapImage extends AsyncTask<String, Void, Bitmap>  {
+        HttpURLConnection httpURLConnection = null;
+        URL url = null;
+        InputStream inputStream;
+        int index = 0;
+
+        SetBitmapImage(int index){
+            this.index = index;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            Bitmap bitmap = null;
+            if(set.get(index).isCancelled()) {
+                return null;
+            }
+            try {
+                url = new URL(params[0]);
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                inputStream = httpURLConnection.getInputStream();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            ImageView imageView = new ImageView(cxt);
+            imageView.setImageBitmap(result);
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(1200, LinearLayout.LayoutParams.MATCH_PARENT));
+            linearLayout.addView(imageView);
         }
     }
 }

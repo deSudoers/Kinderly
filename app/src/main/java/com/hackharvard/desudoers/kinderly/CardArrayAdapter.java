@@ -2,6 +2,7 @@ package com.hackharvard.desudoers.kinderly;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,12 +75,11 @@ public class CardArrayAdapter  extends ArrayAdapter<Card> {
         viewHolder.line1.setText("₹ "+card.getPrice());
         viewHolder.line2.setText(card.getAddress());
         viewHolder.line3.setText(card.getNumRooms()+" Rooms • "+card.getType());
-        try {
-            viewHolder.image.setImageBitmap(card.getImages()[0]);
-        }
-        catch (Exception e){
+        Bitmap bitmap = card.getImage();
+        if(bitmap == null)
             viewHolder.image.setImageResource(R.drawable.default_property);
-        }
+        else
+            viewHolder.image.setImageBitmap(bitmap);
         viewHolder.rating.setImageDrawable(getContext().getDrawable(card.isFavourite() ? R.drawable.star_brown : R.drawable.star_grey));
 
         viewHolder.rating.setOnClickListener(new View.OnClickListener() {
