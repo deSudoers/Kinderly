@@ -1,5 +1,8 @@
 # Kinderly
-<img src="https://i.ibb.co/pRrG98X/rect-kinderly.png" alt="kinderly" border="0" height="60%" width="60%">
+<a href="http://goo.gl/9aTZAR"><img src="https://i.ibb.co/pRrG98X/rect-kinderly.png" alt="kinderly" border="0" height="219" width="600"/></a>
+###### Link to download the app can be found here: http://goo.gl/9aTZAR
+
+<hr>
 
 ### Technologies for the elderly
 ##### Platform to connect the elders in society with the youth for HackHarvard Global 2018-19.
@@ -41,3 +44,4 @@ guests in the houses of elderly.
 
 
 ###### Git repo for the server can be found here https://github.com/deSudoers/Kinderly-server
+
