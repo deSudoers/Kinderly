@@ -33,8 +33,11 @@ public class WizRoomCount extends Fragment{
         String s = room_count.getText().toString();
         if(!s.equals(""))
             numOfRooms = Integer.valueOf(s);
-        else
-            numOfRooms=0;
+        else {
+            numOfRooms = 0;
+            room_count.setError(getString(R.string.error_field_required));
+            room_count.requestFocus();
+        }
         return numOfRooms;
     }
 }

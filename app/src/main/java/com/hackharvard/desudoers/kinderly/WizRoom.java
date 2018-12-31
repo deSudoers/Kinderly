@@ -48,7 +48,7 @@ public class WizRoom extends Fragment{
         return view;
     }
 
-    public void getData(int roomId)
+    public boolean getData(int roomId)
     {
         SharedPreferences sp;
         sp = getActivity().getSharedPreferences("letProperty", Context.MODE_PRIVATE);
@@ -56,9 +56,6 @@ public class WizRoom extends Fragment{
         boolean ab = checkOption(yes,no);
         boolean ac = checkOption(ac_yes,ac_no);
         boolean h = checkOption(h_yes,h_no);
-        if(capacity.getText().toString().isEmpty()){
-            capacity.setError(getString(R.string.error_field_required));
-        }
 
         JSONObject roomInfo = new JSONObject();
         try {
@@ -91,8 +88,19 @@ public class WizRoom extends Fragment{
             }
         }
 
-
         sp.edit().putString("propRooms", rooms.toString()).apply();
+
+
+        if(capacity.getText().toString().isEmpty()){
+            this.capacity.setError(getString(R.string.error_field_required));
+            return false;
+        }
+        return true;
+    }
+    public void showError()
+    {
+        capacity.setError(getString(R.string.error_field_required));
+        capacity.requestFocus();
     }
 
     private boolean checkOption(RadioButton yes,RadioButton no) {

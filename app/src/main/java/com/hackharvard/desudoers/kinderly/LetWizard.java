@@ -50,6 +50,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
     int pageNumber = 0;
     int numOfPages = 6;
     int numOfRooms = 1;
+    boolean nextRoom=true;
     TextView pageTitle;
     private SharedPreferences sp;
 
@@ -108,8 +109,20 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                 updateValues();
                 if(pageNumber+1>numOfPages+numOfRooms)
                     break;
-                pageNumber++;
-                useFragment();
+                if(pageNumber>3 && pageNumber<=3+numOfRooms)
+                {
+                    if(nextRoom)
+                    {
+                        pageNumber++;
+                        useFragment();
+                    }
+                }
+                else
+                {
+                    pageNumber++;
+                    useFragment();
+                }
+
                 break;
             case R.id.prevButton:
                 if(pageNumber==0)
@@ -138,12 +151,18 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                         }
                     sp.edit().putString("roomInfo",null).apply();
                     break;
-            case 4: try{
-                        wr.get(pageNumber-4).getData(pageNumber-3);
+            case 4: boolean check=false;
+                    try {
+                        check = wr.get(pageNumber - 4).getData(pageNumber - 3);
+                    } catch (Exception e) {
+                        Log.e("XYZ", e.toString());
                     }
-                    catch(Exception e) {
-                        Log.e("XYZ",e.toString());
+                    if(!check) {
+                        nextRoom = false;
+                        wr.get(pageNumber - 4).showError();
                     }
+                    else
+                        nextRoom=true;
                     break;
             case 5: wp.getPrice();
                     break;
@@ -166,7 +185,6 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                     break;
             case 5: if(numOfRooms>0)
                         loadFragment(wp);
-
                     else
                         pageNumber--;
                     break;
