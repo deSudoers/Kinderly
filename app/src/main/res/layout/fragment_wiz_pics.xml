@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/pageTitle"
-        android:layout_width="346dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="35dp"
@@ -24,11 +24,11 @@
 
     <TextView
         android:id="@+id/pageText"
-        android:layout_width="343dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="25dp"
         android:fontFamily="@font/questrial"
         android:text="@string/wizpics_text"
         android:textSize="25sp"

@@ -72,6 +72,8 @@
     <string name="rooms">Rooms</string>
     <string name="capacity">Capacity</string>
     <string name="attached_bath">Attached Bathroom</string>
+    <string name="let_rooms">Let Rooms</string>
+    <string name="welcome_text">Welcome a little warmth and company to complete your home</string>
 
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
