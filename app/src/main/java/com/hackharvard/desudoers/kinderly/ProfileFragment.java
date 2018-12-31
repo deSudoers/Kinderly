@@ -105,6 +105,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 goToLoginActivity();
             }
         });
+
+        ImageView contact_call = (ImageView) getView().findViewById(R.id.contact_call);
+        contact_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+getString(R.string.desudoers_mobile)));
+                startActivity(intent);
+            }
+        });
+
+        ImageView contact_msg = (ImageView) getView().findViewById(R.id.contact_msg);
+        contact_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("sms:"+getString(R.string.desudoers_mobile)));
+                startActivity(intent);
+            }
+        });
     }
 
     private void goToLoginActivity(){
@@ -127,8 +147,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         String userAge = null;
         try {
             JSONObject profileData = new JSONObject(details);
-            firstName = profileData.getJSONObject("user").getString("first_name").toUpperCase();
-            secondName = profileData.getJSONObject("user").getString("last_name").toUpperCase();
+            firstName = profileData.getJSONObject("user").getString("first_name");
+            secondName = profileData.getJSONObject("user").getString("last_name");
             userMobile = profileData.getJSONObject("user").getString("mobile");
             userAge = profileData.getJSONObject("user").getString("age");
             new SetBitmapImage().execute(profileData.getJSONObject("user").getString("image"));
