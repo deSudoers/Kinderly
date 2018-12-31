@@ -51,6 +51,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
     int numOfPages = 6;
     int numOfRooms = 1;
     boolean nextRoom=true;
+    boolean buttonChanged=false;
     TextView pageTitle;
     private SharedPreferences sp;
 
@@ -109,7 +110,7 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                 updateValues();
                 if(pageNumber+1>numOfPages+numOfRooms)
                     break;
-                if(pageNumber>3 && pageNumber<=3+numOfRooms)
+                if(pageNumber>3 && pageNumber<=3+numOfRooms+1)
                 {
                     if(nextRoom)
                     {
@@ -127,9 +128,10 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
             case R.id.prevButton:
                 if(pageNumber==0)
                     super.finish();
-                if(pageNumber==6) {
+                if(buttonChanged==true) {
                     Button button = findViewById(R.id.nextButton);
                     button.setBackgroundResource(R.drawable.next);
+                    buttonChanged=false;
                 }
                 pageNumber--;
                 getSupportFragmentManager().popBackStackImmediate();
@@ -164,7 +166,16 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                     else
                         nextRoom=true;
                     break;
-            case 5: wp.getPrice();
+            case 5: boolean b = wp.getPrice();
+                    if(!b)
+                    {
+                        nextRoom = false;
+                        wp.showError();
+                    }
+                    else
+                        nextRoom=true;
+
+
                     break;
         }
     }
@@ -190,8 +201,10 @@ public class LetWizard extends AppCompatActivity implements View.OnClickListener
                     break;
             case 6: loadFragment(wef);
                     button.setBackgroundResource(R.drawable.ic_done);
+                    buttonChanged=true;
                     break;
-            case 7: JSONObject property = null;
+            case 7: pageTitle.setText(R.string.wait);
+                    JSONObject property = null;
                     String data = null;
                     String propId = null;
                     try {

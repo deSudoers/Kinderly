@@ -22,30 +22,7 @@ public class WizExtraFeatures extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstancestate) {
         View view =  inflater.inflate(R.layout.fragment_wiz_extra_features,container,false);
         pageTitle = view.findViewById(R.id.pageTitle);
-
-        //For display purpose
-        SharedPreferences sp = getActivity().getSharedPreferences("letProperty",Context.MODE_PRIVATE);
-//        String s = sp.getString("blockNo","default");
-//        s = s + ", " + sp.getString("building","default");
-//        s = s + ", " + sp.getString("street","default");
-//        s = s + ", " + sp.getString("city","default");
-//        s = s + ", " + sp.getString("state","default");
-//        s = s + ", " + sp.getString("type","default");
-//        s = s + ", " + sp.getInt("numOfRooms",0);
-//        s = sp.getString("roomInfo","default");
-        pageTitle.setText(sp.getString("propAddress","default")
-                +sp.getString("propRooms","default")
-                +sp.getString("propImages","default"));
-
-//        try {
-//            JSONObject jsonObject = new JSONObject(s);
-//            String x = jsonObject.toString();
-////            Log.e("ABC",x);
-////            pageTitle.setText(x);
-//            pageTitle.setText(jsonObject.getBoolean("has_ac")+"");
-//        } catch (JSONException e) {
-//            Log.e("ABC",e.toString());
-//        }
+        pageTitle.setText(R.string.finish_property);
 
         return view;
         //TODO: Add content for extra features

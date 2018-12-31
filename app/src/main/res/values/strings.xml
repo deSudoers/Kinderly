@@ -82,7 +82,6 @@
     <string name="contact_us">Contact Us</string>
     <string name="about_us">About Us</string>
     <string name="about_us_info"></string>
-
     <string name="url">http://142.93.210.210:5000/</string>
     <string name="greetings">Greetings!</string>
     <string name="address_text">Let\'s start by adding your home address</string>
@@ -91,5 +90,8 @@
 
     <string name="desudoers">deSudoers</string>
     <string name="desudoers_mobile">+91 7892956740</string>
+
+    <string name="finish_property">Click ✓ to finish adding your property</string>
+    <string name="wait">Please wait…</string>
 </resources>
 

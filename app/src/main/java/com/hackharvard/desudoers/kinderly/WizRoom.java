@@ -97,6 +97,7 @@ public class WizRoom extends Fragment{
         }
         return true;
     }
+
     public void showError()
     {
         capacity.setError(getString(R.string.error_field_required));

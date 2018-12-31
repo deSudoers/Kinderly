@@ -26,14 +26,23 @@ public class WizPrice extends Fragment{
     }
 
 
-    public void getPrice()
+    public boolean getPrice()
     {
         SharedPreferences sp = getActivity().getSharedPreferences("letProperty",Context.MODE_PRIVATE);
         String s = price.getText().toString();
         Log.e("ABC",s);
         if(!s.equals(""))
             sp.edit().putInt("propPrice",Integer.valueOf(s)).apply();
-        else
+        else {
             sp.edit().putInt("propPrice",0).apply();
+            return false;
+        }
+        return true;
+    }
+
+    public void showError()
+    {
+        price.setError(getString(R.string.error_field_required));
+        price.requestFocus();
     }
 }
