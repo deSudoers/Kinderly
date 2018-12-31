@@ -12,6 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/AppTheme"
         android:largeHeap="true">
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
@@ -25,6 +26,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +37,7 @@
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
+            android:screenOrientation="portrait"
             android:parentActivityName=".LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -43,15 +46,18 @@
         <activity
             android:name=".RentActivity"
             android:label="@string/title_activity_rent"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LetActivity"
             android:label="@string/title_activity_let"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CardActivity"
             android:label=""
             android:parentActivityName=".RentActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -59,10 +65,12 @@
         </activity>
         <activity
             android:name=".FilterActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_filter">
         </activity>
         <activity
             android:name=".LetWizard"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
