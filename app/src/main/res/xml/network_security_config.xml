@@ -2,5 +2,8 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">142.93.210.210</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
     </domain-config>
 </network-security-config>

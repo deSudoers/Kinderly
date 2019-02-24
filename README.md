@@ -25,10 +25,10 @@ guests in the houses of elderly.
 ## Features
   - #### Simple UI
     - Simple and Clear UI to simplify the user experience especially for the elderly people
-  - #### Elderly (rent rooms) mode
+  - #### Elderly (let rooms) mode
     - In this mode the user is prompted with a wizard where he can add all the  information about his property
 
-  - #### Youth (let rooms) mode
+  - #### Youth (rent rooms) mode
     - In this mode users can browse through all the available rooms for rent
     - User can shortlist properties
     - User can directly contact the respective owners of a particular property

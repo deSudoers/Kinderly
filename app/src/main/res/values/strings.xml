@@ -93,4 +93,5 @@
 
     <string name="finish_property">Click ✓ to finish adding your property</string>
     <string name="wait">Please wait…</string>
+    <string name="room_limit">Max room limit is 10</string>
 </resources>

@@ -29,10 +29,19 @@ public class WizRoomCount extends Fragment{
 
     public int getNumberOfRooms()
     {
-        int numOfRooms;
+        int numOfRooms=0;
+        double temp=0;
         String s = room_count.getText().toString();
-        if(!s.equals(""))
-            numOfRooms = Integer.valueOf(s);
+        if(!s.equals("")) {
+            temp = Double.valueOf(s);
+            if (temp > 10) {
+                numOfRooms = 0;
+                room_count.setError(getString(R.string.room_limit));
+                room_count.requestFocus();
+            } else {
+                numOfRooms = (int) temp;
+            }
+        }
         else {
             numOfRooms = 0;
             room_count.setError(getString(R.string.error_field_required));
